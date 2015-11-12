@@ -1,0 +1,121 @@
+<!--
+
+Portal Ochotnicy - http://ochotnicy.pl
+
+Copyright (C) Pracownia badań i innowacji społecznych Stocznia
+
+Development: TEONITE - http://teonite.com
+
+-->
+<div class="main-content-section">
+
+            <div class="container">
+
+                <div class="title-bar preview negative-top">
+                    <h1>Oferty na portalu</h1>
+                </div>
+
+                <div class="container regular-content">
+
+                    <div class="container option-tabs">
+                        <ul class="nav nav-pills tabs">
+                            <li role="presentation" ng-class="{'active': tab == 'pending'}">
+                                <a ng-click="setTab('pending')">Oczekujące na akceptację</a>
+                                <span class="arrow" ng-show="tab == 'pending'"></span>
+                            </li>
+                            <li role="presentation" ng-class="{'active': tab == 'active'}">
+                                <a ng-click="setTab('active')">Aktywne</a>
+                                <span class="arrow" ng-show="tab == 'active'"></span>
+                            </li>
+                            <li role="presentation" ng-class="{'active': tab == 'blocked'}">
+                                <a ng-click="setTab('blocked')">Zablokowane</a>
+                                <span class="arrow" ng-show="tab == 'blocked'"></span>
+                            </li>
+                            <li role="presentation" ng-class="{'active': tab == 'finished'}">
+                                <a ng-click="setTab('finished')">Zakończone</a>
+                                <span class="arrow" ng-show="tab == 'finished'"></span>
+                            </li>
+                        </ul>
+
+                        <div class="container">
+                            <div class="short-content col-xs-12 container" ng-show="tab == 'pending'">
+                                <div class="section-header row">
+                                    <h2 class="pull-left">Oferty oczekujące na akceptację <span class="number">({{pendingOffers.length}})</span>
+                                        <span class="corner-big"></span>
+                                    </h2>
+
+                                    <div class="pull-right res-new-line">
+                                        <label for="sortowanie">Sortowanie:</label>
+                                        <select ng-model="sorting.ordering" ng-options="option as option.name for option in orderingOptions" name="sortuj-po" class="border-input" id="sortowanie">
+                                    </div>
+                                </div>
+
+                                <form>
+                                    <div class="project-posts">
+                                         <div offer-list offers="pendingOffers" limit="10" options="{state: state, evaluateOfferModal: evaluateOfferModal, pendingOffer: true, showCreationDate: true, acceptOffer: acceptOffer}" type="admin"></div>
+                                    </div>
+                                </form>
+                            </div>
+
+                            <div class="short-content col-xs-12 container" ng-show="tab == 'active'">
+                                <div class="section-header row">
+                                    <h2 class="pull-left">Aktywne oferty <span class="number">({{activeOffers.length}})</span>
+                                        <span class="corner-big"></span>
+                                    </h2>
+
+                                    <div class="pull-right res-new-line">
+                                        <label for="sortowanie">Sortowanie:</label>
+                                        <select ng-model="sorting.orderingActive" ng-options="option as option.name for option in orderingActiveOptions" name="sortuj-po" class="border-input" id="sortowanie">
+                                    </div>
+                                </div>
+
+                                <form>
+                                    <div class="project-posts">
+                                        <div offer-list offers="activeOffers" limit="10" options="{state: state, evaluateOfferModal: evaluateOfferModal, activeOffer: true, changePromote: changePromote, showPublishDate: true}" type="admin"></div>
+                                    </div>
+                                </form>
+                            </div>
+
+                            <div class="short-content col-xs-12 container" ng-show="tab == 'blocked'">
+                                <div class="section-header row">
+                                    <h2 class="pull-left">Zablokowane oferty <span class="number">({{blockedOffers.length}})</span>
+                                        <span class="corner-big"></span>
+                                    </h2>
+
+                                    <div class="pull-right res-new-line">
+                                        <label for="sortowanie">Sortowanie:</label>
+                                        <select ng-model="sorting.ordering" ng-options="option as option.name for option in orderingOptions" name="sortuj-po" class="border-input" id="sortowanie">
+                                    </div>
+                                </div>
+
+                                <form>
+                                    <div class="project-posts">
+                                        <div offer-list offers="blockedOffers" limit="10" options="{state: state, evaluateOfferModal: evaluateOfferModal, blockedOffer: true, showCreationDate: true}" type="admin"></div>
+                                    </div>
+                                </form>
+                            </div>
+
+                            <div class="short-content col-xs-12 container" ng-show="tab == 'finished'">
+                                <div class="section-header row">
+                                    <h2 class="pull-left">Zakończone oferty <span class="number">({{finishedOffers.length}})</span>
+                                        <span class="corner-big"></span>
+                                    </h2>
+
+                                    <div class="pull-right res-new-line">
+                                        <label for="sortowanie">Sortowanie:</label>
+                                        <select ng-model="sorting.orderingActive" ng-options="option as option.name for option in orderingActiveOptions" name="sortuj-po" class="border-input" id="sortowanie">
+                                    </div>
+                                </div>
+
+                                <form>
+                                    <div class="project-posts">
+                                        <div offer-list offers="finishedOffers" limit="10" options="{state: state, evaluateOfferModal: evaluateOfferModal, showPublishDate: true}" type="admin"></div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>

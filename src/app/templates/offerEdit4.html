@@ -1,0 +1,202 @@
+<!--
+
+Portal Ochotnicy - http://ochotnicy.pl
+
+Copyright (C) Pracownia badań i innowacji społecznych Stocznia
+
+Development: TEONITE - http://teonite.com
+
+-->
+<div class="main-content-section">
+    <div class="container">
+        <div class="title-bar negative-top" wizard-header url="offerWizardHeader.html" step="4"></div>
+        <div class="container regular-content">
+            <div class="full-width container">
+                <div class="registration-finish steps row">
+                    <div class="important-content yellow m-bottom-30">
+                        Możesz pominąć ten krok i wypełnić poniższe pola w późniejszym czasie.
+                        <div class="row">
+                            <table class="col-xs-12 m-top-20">
+                                <tr>
+                                    <td class="col-xs-12 radio-buttons">
+                                        <div class="radio-label-box col-sm-6 col-xs-12">
+                                            <label class="radio-circle col-xs-12" ng-class="{'active': addAgreement == 'false'}">
+                                                <span class="radio-circle pull-left"><span class="dot"></span><input type="radio" name="addAgreement" value="false" ng-model="addAgreement" class="pull-left" /></span>
+                                                Chcę pominąć ten krok
+                                            </label>
+                                        </div>
+                                        <div class="radio-label-box col-sm-6 col-xs-12">
+                                            <label class="radio-circle col-xs-12" ng-class="{'active': addAgreement == 'true'}">
+                                                <span class="radio-circle pull-left"><span class="dot"></span><input type="radio" name="addAgreement" value="true" ng-model="addAgreement" class="pull-left" /></span>
+                                                Wypełniam pola teraz
+                                            </label>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="corner-arrow"></div>
+                    </div>
+
+                    <h2 ng-show="addAgreement == 'true'">Podstawowe dane do porozumienia</h2>
+
+                    <div ng-show="addAgreement == 'true'" class="row">
+                        <form ng-submit="submit()" novalidate name="form">
+                            <table class="col-md-11 col-xs-12 row m-bottom-30">
+                                <tr>
+                                    <td class="col-xs-6 col-md-3">
+                                        <p class=""><label for="agreement-start">Umowa od</label> <display-validate element="form.agreement_stands_from" model="offer.agreement_stands_from" required="true" edit="!isNew"></display-validate></p>
+                                        <div class="">
+                                            <input type="text" placeholder="DD/MM/RRRR" id="agreement-start" class="border-input" name="agreement_stands_from"
+                                                datepicker-popup="dd/MM/yyyy" is-open="opened.pub" max-date="offer.agreement_stands_to" min-date="pubMinDate"
+                                                datepicker-options="dateOptions" show-button-bar="false"
+                                                datepicker-append-to-body="true" ng-required="addAgreement == 'true'"
+                                                ng-model="offer.agreement_stands_from"
+                                                ng-click="openCalendar($event, 'pub')">
+                                            <div ng-messages="form.agreement_stands_from.$error" ng-messages-include="errorMessages.html" ng-if="form.submitted || form.agreement_stands_from.$dirty"></div>
+                                        </div>
+                                    </td>
+                                    <td class="col-xs-6 col-md-3">
+                                        <p class=""><label for="agreement-end">Umowa do</label> <display-validate element="form.agreement_stands_to" model="offer.agreement_stands_from" required="true" edit="!isNew"></display-validate></p>
+                                        <div class="">
+                                            <input type="text" placeholder="DD/MM/RRRR" id="agreement-end" class="border-input"
+                                                datepicker-popup="dd/MM/yyyy" is-open="opened.close" min-date="offer.agreement_stands_from"
+                                                datepicker-options="dateOptions" show-button-bar="false" name="agreement_stands_to"
+                                                datepicker-append-to-body="true" ng-required="addAgreement == 'true'"
+                                                ng-model="offer.agreement_stands_to" ng-click="openCalendar($event, 'close')">
+                                            <div ng-messages="form.agreement_stands_to.$error" ng-messages-include="errorMessages.html" ng-if="form.submitted || form.agreement_stands_to.$dirty"></div>
+                                        </div>
+
+                                    </td>
+                                    <td class="col-xs-12 col-md-5">
+                                        <div class="comment">
+                                            Okres, w którym wolontariusz ma obowiążek wykonywać powierzone mu czynności.
+                                            <span class="corner white-right"></span>
+                                            <span class="arrow"></span>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-xs-12 col-md-6">
+                                        <p class=""><label for="tasks-agreement">Zadania i obowiązki</label> <display-validate element="form.body" model="task.body" required="true" edit="!isNew"></display-validate></p>
+                                        <div class="">
+                                            <textarea placeholder="Przykład: Pomoc z nadrobieniem zaległości szkolnych i przygotowaniem się do egzaminów poprawkowych.
+                                            Pogotowie Lekcyjne zapewnia im komfortowe warunki do nauki i pozwala w miłej atmosferze korzystać z wiedzy wolontariuszy." name="body" ng-required="true"
+                                                      id="tasks-agreement" class="textarea" ng-model="task.body" ng-minlength="30" ng-maxlength="500" ui-tinymce="tinymceOptions"></textarea>
+                                            <div ng-messages="form.body.$error" ng-messages-include="errorMessages.html" ng-if="form.submitted || form.body.$dirty"></div>
+                                        </div>
+                                    </td>
+                                    <td class="col-xs-12 col-md-5">
+                                        <div class="comment">
+                                            Spis zadań i obowiązków przydzielonych wolontariuszowy widoczny na umowie.
+                                            <span class="corner white-right"></span>
+                                            <span class="arrow"></span>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </form>
+                    </div>
+
+                    <h2 ng-show="addAgreement == 'true'">Dane osoby podpisującej umowę</h2>
+
+                    <div ng-show="addAgreement == 'true'" class="row">
+                        <form ng-submit="submit()" novalidate name="signatoryForm">
+                            <table class="col-md-11 col-xs-12 row m-bottom-20">
+                                <tr>
+                                    <td class="col-xs-12 col-md-6">
+                                        <p class="">
+                                            <label for="signatary">Osoby uprawnione do podpisania umowy:</label> <display-validate element="signatoryForm.agreement_signatories" model="offer.agreement_signatories" required="addAgreement == 'true'" edit="!isNew" ></display-validate>
+                                        </p>
+                                        <select id="signatary" multiple chosen="{inherit_select_classes:true}"
+                                                    ng-model="offer.agreement_signatories" name="agreement_signatories"
+                                                    ng-options="item.id as getSignatoryDisplay(item) for item in signatories"
+                                                    data-placeholder=""
+                                                    class="border-input" ng-required="addAgreement == 'true'" width="'100%'"></select>
+                                        <div ng-messages="signatoryForm.agreement_signatories.$error" ng-messages-include="errorMessages.html" ng-if="signatoryForm.submitted || signatoryForm.agreement_signatories.$dirty"></div>
+                                    </td>
+                                    <td class="col-xs-12 col-md-5">
+                                        <div class="comment">
+                                            Wybierz z listy osoby które będą podpisywały umowę w imieniu organizacji.
+                                            <span class="corner white-right"></span>
+                                            <span class="arrow"></span>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </form>
+                    </div>
+                    <div ng-show="addAgreement == 'true'" class="row">
+                        <form ng-submit="addSignatory()" novalidate name="addSignatoryForm">
+                            <table class="col-md-11 col-xs-12 row">
+                                <tr>
+                                    <td class="col-xs-12 col-md-6">
+                                        <p class=""><label for="alterantive-name">Imię</label> <display-validate element="addSignatoryForm.first_name" model="signatory.first_name" required="true" edit="false" ></display-validate></p>
+                                        <div class="">
+                                            <input type="text" placeholder="Imię osoby podpisującej umowę" id="alterantive-name" class="border-input" ng-model="signatory.first_name" name="first_name"
+                                                   ng-required="addAgreement == 'true'" ng-minlength="2" ng-maxlength="30">
+                                            <div ng-messages="addSignatoryForm.first_name.$error" ng-messages-include="errorMessages.html" ng-if="addSignatoryForm.submitted || addSignatoryForm.first_name.$dirty"></div>
+                                        </div>
+                                    </td>
+                                    <td class="col-xs-12 col-md-5">
+                                        <div class="comment">
+                                            Jeśli na liście brak osoby odpowiedzialnej za podpisanie tego porozumienia/certyfikatu, dodaj ją w tej sekcji.
+                                            <span class="corner white-right"></span>
+                                            <span class="arrow"></span>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-xs-12 col-md-6">
+                                        <p class=""><label for="alterantive-familyname">Nazwisko</label> <display-validate element="addSignatoryForm.last_name" model="signatory.last_name" required="true" edit="false" ></display-validate></p>
+                                        <div class="">
+                                            <input type="text" placeholder="Nazwisko osoby podpisującej umowę" id="alterantive-familyname" class="border-input" ng-model="signatory.last_name"
+                                                   ng-required="addAgreement == 'true'" name="last_name" ng-minlength="3" ng-maxlength="30">
+                                            <div ng-messages="addSignatoryForm.last_name.$error" ng-messages-include="errorMessages.html" ng-if="addSignatoryForm.submitted || addSignatoryForm.last_name.$dirty"></div>
+                                        </div>
+                                    </td>
+                                    <td class="col-xs-12 col-md-6">&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td class="col-xs-12 col-md-6">
+                                        <p class=""><label for="candidates-number">Stanowisko</label> <display-validate element="addSignatoryForm.position" model="signatory.position" required="false" edit="false" ></display-validate></p>
+                                        <div class="col-xs-12 col-md-64">
+                                            <input type="text" placeholder="Stanowisko osoby podpisującej umowę" id="candidates-number" class="border-input" ng-model="signatory.position"
+                                                   ng-required="false" name="position" ng-minlength="3" ng-maxlength="20">
+                                            <div ng-messages="addSignatoryForm.position.$error" ng-messages-include="errorMessages.html" ng-if="addSignatoryForm.submitted || addSignatoryForm.position.$dirty"></div>
+                                        </div>
+                                    </td>
+                                    <td class="col-xs-12 col-md-6">&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td class="col-xs-12 col-md-6" colspan="2">
+                                        <button class="btn options orange" type="submit"><i class="fa fa-plus"></i> Dodaj</button>
+                                    </td>
+                                </tr>
+                            </table>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="sub-bar menu">
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-5">
+                            <button class="btn options white" ui-sref="offer.list">
+                                Anuluj tworzenie projektu<i class="fa fa-close right"></i>
+                            </button>
+                        </div>
+                        <div class="col-xs-12 col-sm-7 right">
+                            <button class="btn options white responsive-big" ng-click="goToStep(3)">
+                                <i class="fa fa-chevron-left left"></i>Poprzedni krok
+                            </button>
+                            <button class="btn options orange responsive-big" ng-click="submit()">
+                                Kolejny krok <i class="fa fa-chevron-right right"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div recommended-offers offers="promotedOffers" limit="4"></div>

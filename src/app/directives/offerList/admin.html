@@ -1,0 +1,79 @@
+<div class="search-comment" ng-show="!offers.length">Nie znaleziono żadnych ogłoszeń</div>
+<div class="media post row" dir-paginate="offer in offers | itemsPerPage: limit">
+    <a class="media-left" ui-sref="offer.details({ id: offer.id })">
+        <img ng-src="{{ getMediaUrl(offer.small_thumbnail_relation.filename, 'photo') }}" alt="{{ offer.title }}">
+    </a>
+
+    <div class="media-body">
+        <div class="row m-bottom-10">
+            <h3><a ui-sref="offer.details({ id: offer.id })">{{ offer.title }}</a></h3>
+            <p><a ui-sref="organization.offers({id: offer.publishing_organization.id})">{{ offer.publishing_organization.fullname }}</a></p>
+        </div>
+        <div class="row details">
+            <div class="col-md-4 col-sm-12 media-details" ng-if="options.showCreationDate">
+                <p class="data header">
+                    Data stworzenia oferty:
+                    <span>{{offer.created_at | amDateFormat:'DD.MM.YYYY'}}</span>
+                </p>
+            </div>
+            <div class="col-md-4 col-sm-12 media-details" ng-if="options.showPublishDate">
+                <p class="data header">
+                    Data publikacji oferty:
+                    <span>{{offer.published_at | amDateFormat:'DD.MM.YYYY'}}</span>
+                </p>
+            </div>
+            <div class="col-sm-8 col-xs-12 media-details">
+                <p class="data header m-bottom-0">Tagi</p>
+                <ul class="tags">
+                    <li ng-repeat="category in offer.category"><a ng-click="toogleFilter(category.id)">{{ category.name }}</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="media-right accept-reject" ng-if="options.pendingOffer">
+        <a class="circle-button tiny red pull-left" ng-click="options.evaluateOfferModal(options.state.rejected, offer.id)"><i class="fa fa-close"></i>
+            <span class="info-popover reject">Odrzuć
+                <span class="hidden-text"> ofertę</span>
+                <span class="corner-arrow"></span>
+            </span>
+        </a>
+    </div>
+    <div class="media-right accept-reject" ng-if="options.pendingOffer">
+        <a class="circle-button tiny green pull-left" ng-click="options.acceptOffer(offer.id)"><i class="fa fa-check"></i>
+            <span class="info-popover accept">
+                Zaakceptuj
+                <span class="hidden-text"> ofertę</span>
+                <span class="corner-arrow"></span>
+            </span>
+        </a>
+    </div>
+    <div class="media-right accept-reject" ng-if="options.pendingOffer">
+        <a ui-sref="offer.details({id: offer.id})" class="circle-button tiny gray pull-left"><i class="fa fa-search"></i>
+            <span class="info-popover">
+                Podgląd
+                <span class="hidden-text"> oferty</span>
+                <span class="corner-arrow"></span>
+            </span>
+        </a>
+    </div>
+    <div class="media-right circle-button" ng-if="!options.pendingOffer">
+        <div class="media-right dropdown-list big-circle" dropdown>
+            <div class="circle-button gray dropdown-toggle" dropdown-toggle role="button" aria-expanded="false">
+                <a><i class="fa fa-gear margin"></i>Opcje<span class="hidden-text"> względem oferty</span></a>
+            </div>
+            <ul class="dropdown-menu from-left" role="menu">
+                <li class="corner blue right"></li>
+                <li>
+                    <a class="btn blue" ng-if="options.blockedOffer" ng-click="options.evaluateOfferModal(options.state.published, offer.id)"><i class="fa fa-unlock-alt"></i>Odblokuj ofertę</a>
+                    <a class="btn blue" ng-if="options.activeOffer" ng-click="options.changePromote(offer)"><i class="fa fa-flag"></i>
+                        <span ng-show="!offer.is_promoted">Promuj ofertę</span>
+                        <span ng-show="offer.is_promoted">Przestań promować ofertę</span>
+                    </a>
+                    <a class="btn blue" ng-if="options.activeOffer" ng-click="options.evaluateOfferModal(options.state.depublished, offer.id)"><i class="fa fa-lock"></i>Zablokuj ofertę</a>
+                    <a class="btn blue" ng-click="options.evaluateOfferModal(options.state.removed, offer.id)"><i class="fa fa-remove"></i>Usuń ofertę</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<dir-pagination-controls></dir-pagination-controls>

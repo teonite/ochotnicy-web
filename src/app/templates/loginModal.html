@@ -1,0 +1,88 @@
+<!--
+
+Portal Ochotnicy - http://ochotnicy.pl
+
+Copyright (C) Pracownia badań i innowacji społecznych Stocznia
+
+Development: TEONITE - http://teonite.com
+
+-->
+<!-- logowanie -->
+
+<div class="modal-header separator">
+    <button type="button" class="close" ng-click="cancel()">
+        <span aria-hidden="true">&times;</span><span class="sr-only">Zamknij okno</span>
+    </button>
+    <h2 class="modal-title" id="modal-login-title">Zaloguj się na swoje konto.</h2>
+    <div class="row reg-choice">
+        <ul>
+            <li class="col-sm-6 col-xs-12">
+                <label for="sposob-rejestracji">Wybierz sposób logowania:</label>
+            </li>
+            <li class="col-sm-6 col-xs-12">
+                <select name="sposob-rejestracji" class="border-input blue" id="sposob-rejestracji"
+                        ng-model="mode.type">
+                    <option value="dedicated">Dedykowane konto w serwisie</option>
+                    <option value="social">Logowanie za pomocą serwisu społecznościowego</option>
+                </select>
+            </li>
+        </ul>
+    </div>
+</div>
+<div class="modal-body" ng-show="mode.type == 'dedicated'">
+    <form ng-submit="login()" novalidate name="loginForm">
+        <ul class="row">
+            <li class="col-sm-6 col-xs-12">
+                <label for="login-name">Login:</label>
+            </li>
+            <li class="col-sm-6 col-xs-12">
+                <input ng-model="user.username" type="text" name="login" class="border-input blue"
+                       id="login-name" required
+                       placeholder="Twój login" ng-maxlength="30">
+                <div ng-messages="loginForm.login.$error" ng-messages-include="errorMessages.html" ng-if="loginForm.submitted || loginForm.login.$dirty"></div>
+                <p ng-repeat="error in errors.username" class="validation red">
+                    {{error}}
+                </p>
+            </li>
+        </ul>
+        <ul class="row">
+            <li class="col-sm-6 col-xs-12">
+                <label for="login-password">Hasło:</label>
+            </li>
+            <li class="col-sm-6 col-xs-12">
+                <input ng-model="user.password" type="password" name="password" class="border-input blue"
+                       id="login-password" required
+                       placeholder="Twoje hasło">
+                <div ng-messages="loginForm.password.$error" ng-messages-include="errorMessages.html" ng-if="loginForm.submitted || loginForm.password.$dirty"></div>
+                <p ng-repeat="error in errors.password" class="validation red">
+                    {{error}}
+                </p>
+            </li>
+        </ul>
+        <ul class="row">
+            <li class="col-sm-12 col-xs-12">
+                <p class="validation red">
+                    {{error}}
+                </p>
+            </li>
+        </ul>
+        <div class="reg-button">
+            <button type="submit" class="btn big orange"><i class="fa fa-lock"></i> Zaloguj</button>
+        </div>
+    </form>
+</div>
+<div class="modal-body" ng-show="mode.type == 'social'">
+    <h3>Wybierz portal, którego użyjesz do logowania:</h3>
+
+    <p class="social">
+        <a ng-href="{{fbUrl}}" target="_self"><img src="img/icon_facebook_big.jpg" alt="Logowanie przez Facebook"></a>
+    </p>
+
+    <p class="social">
+        <a ng-href="{{twitterUrl}}" target="_self"><img src="img/icon_twitter_big.jpg" alt="Logowanie przez Twitter"></a>
+    </p>
+</div>
+<div class="modal-footer">
+    <p>Nie masz jeszcze konta? <a ng-click="openRegisterModal(); cancel()">Zarejestruj się »</a></p>
+</div>
+

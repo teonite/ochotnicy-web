@@ -1,0 +1,108 @@
+<div class="media post row" ng-show="!offers.length">
+    <p class="search-comment">Brak ofert</p>
+</div>
+<div class="media post row" dir-paginate="application in offers | itemsPerPage: limit" ng-show="offers.length">
+    <a class="media-left" ui-sref="offer.details({ id: application.offer.id })">
+        <img ng-src="{{ getMediaUrl(application.offer.small_thumbnail_relation.filename, 'photo') }}" alt="{{ application.offer.title }}">
+    </a>
+    <div class="media-body">
+        <h3><a ui-sref="offer.details({ id: application.offer.id })">{{ application.offer.title }} <span class="id">#{{ application.offer.id }}</span></a></h3>
+        <p><a ui-sref="organization.profile({id: application.offer.publishing_organization.id})">{{ application.offer.publishing_organization.fullname }}</a></p>
+        <div class="row details">
+            <div class="col-md-4 col-sm-12">
+                <p class="data">
+                    Data publikacji:
+                    <span><span>{{ application.offer.publish_from | amDateFormat:'DD.MM.YYYY'}}</span></span>
+                </p>
+            </div>
+            <div class="col-md-4 col-sm-12" ng-if="options.showApplicationDate">
+                <p class="data">
+                    Data przystąpienia:
+                    <span><span>{{ application.created_at | amDateFormat:'DD.MM.YYYY'}}</span></span>
+                </p>
+            </div>
+            <div class="col-md-4 col-sm-12" ng-if="options.showAgreementDate">
+                <p class="data">
+                    Data zakończenia:
+                    <span><span>{{ application.offer.agreement_stands_to | amDateFormat:'DD.MM.YYYY'}}</span></span>
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="media-right">
+        <div class="media-right dropdown-list big-circle" dropdown ng-if="options.showDownloadButtons || options.showTestimonial">
+            <div class="circle-button gray dropdown-toggle" dropdown-toggle role="button" aria-expanded="false">
+                <a><i class="fa fa-gear margin"></i>Opcje<span class="hidden-text"> względem oferty</span></a>
+            </div>
+            <ul class="dropdown-menu from-left" role="menu">
+                <li class="corner blue right"></li>
+                <li>
+                    <a class="btn blue" ng-disabled="application.offer.testimonial.organization" ng-if="options.showTestimonial" ng-click="options.openRatingModal(application.offer.publishing_organization, application.offer)"><i class="fa fa-comment" ></i>Wystaw opinię</a>
+                    <a class="btn blue" ng-if="options.showDownloadButtons" ng-click="options.getAgreement(application.offer.id, 'agreement')"><i class="fa fa-file-text-o"></i>Zobacz porozumienie</a>
+                    <a class="btn blue" ng-if="options.showDownloadButtons" ng-click="options.getAgreement(application.offer.id, 'certificate')" ng-disabled="!application.has_certificate"><i class="fa fa-file-text-o"></i>Zobacz zaświadczenie</a>
+                    <!--<a class="btn blue"><i class="fa fa-envelope"></i>Wyślij wiadomość</a>-->
+                    <!--<a class="btn blue"><i class="fa fa-remove"></i>Zrezygnuj</a>-->
+                </li>
+            </ul>
+        </div>
+        <div class="media-right circle-button">
+            <a ui-sref="offer.details({ id: application.offer.id })">Szczegóły <span class="hidden-text">na temat: {{ application.offer.title }}</span></a>
+        </div>
+    </div>
+    <div class="opinions row">
+        <div class="opinion info" ng-if="options.showAgreeMessage && application.message.length">
+            <h4 class="text-green">
+                <i class="fa fa-check"></i>Zostałeś zaakceptowany
+            </h4>
+            <p class="comment" ng-bind-html="application.message"></p>
+        </div>
+        <div class="opinion info" ng-if="options.showRejectMessage">
+            <h4 class="text-red">
+                <i class="fa fa-remove"></i>Powód odrzucenia
+            </h4>
+            <p class="comment" ng-bind-html="application.message"></p>
+        </div>
+        <div class="col-sm-6 col-xs-12" ng-if="options.showTestimonial">
+            <div class="opinion no-comment" ng-show="!application.offer.testimonial.organization">
+                <span>Nie wystawiłeś jeszcze opinii tej organizacji.</span>
+            </div>
+            <div class="opinion orga" ng-show="application.offer.testimonial.organization">
+                <h4>
+                    Twoja opinia:
+                    <p class="pull-right">
+                        <rating ng-model="application.offer.testimonial.organization.rating" max="5" readonly="true" state-on="'fa fa-star yellow'" state-off="'fa fa-star'"></rating>
+                        (Ocena: {{application.offer.testimonial.organization.rating}}/5)
+                    </p>
+                </h4>
+                <p class="comment" ng-show="application.offer.testimonial.organization.testimonial">
+                    {{application.offer.testimonial.organization.testimonial}}
+                </p>
+                <p ng-show="!application.offer.testimonial.organization.testimonial" class="comment">
+                    Brak opisu
+                </p>
+            </div>
+        </div>
+        <div class="col-sm-6 col-xs-12" ng-if="options.showTestimonial">
+            <div class="opinion no-comment" ng-show="!application.offer.testimonial.volunteer">
+                <span>Organizacja nie wystawiła jeszcze opinii.</span>
+            </div>
+            <div class="opinion user" ng-show="application.offer.testimonial.volunteer">
+                <h4>
+                    {{application.offer.publishing_organization.fullname}}:
+                    <p class="pull-right">
+                        <rating ng-model="application.offer.testimonial.volunteer.rating" readonly="true" max="5" state-on="'fa fa-star yellow'" state-off="'fa fa-star'"></rating>
+                        (Ocena: {{application.offer.testimonial.volunteer.rating}}/5)
+                    </p>
+                </h4>
+                <p ng-show="application.offer.testimonial.volunteer.testimonial.length">
+                    {{application.offer.testimonial.volunteer.testimonial}}
+                </p>
+                <p ng-show="!application.offer.testimonial.volunteer.testimonial">
+                    Brak opisu
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<dir-pagination-controls></dir-pagination-controls>

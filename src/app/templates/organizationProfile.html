@@ -1,0 +1,157 @@
+<!--
+
+Portal Ochotnicy - http://ochotnicy.pl
+
+Copyright (C) Pracownia badań i innowacji społecznych Stocznia
+
+Development: TEONITE - http://teonite.com
+
+-->
+<div class="main-content-section">
+    <div class="container">
+       <div id="sticky-anchor" ></div>
+        <div id="sticky" class="title-bar negative-top">
+            <h1>{{ organization.fullname }}<span class="text-hide"> (profil organizacji)</span></h1>
+            <!--<a class="btn purple join" ng-if="!isSelfProfile"><i class="fa fa-envelope"></i>Napisz do nas<span class="corner left"></span></a>-->
+            <a ng-click="doTheBack()" class="btn purple join" ng-if="user.is_superuser && !isSelfProfile"><i class="fa fa-backward"></i>powrót<span class="corner left"></span></a>
+            <ul class="nav nav-pills join" ng-if="isSelfProfile">
+                <li role="presentation" class="dropdown" dropdown>
+                    <a class="dropdown-toggle btn purple" dropdown-toggle role="button" aria-expanded="false">
+                        <i class="fa fa-cog"></i>Opcje<span class="corner left"></span>
+                    </a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li>
+                            <a class="btn purple" ui-sref="organization.edit" role="button" aria-expanded="false">
+                                <i class="fa fa-pencil"></i>Edytuj profil
+                            </a>
+                        </li>
+                        <li>
+                            <a class="btn purple" ui-sref="organization.offers({id: 'my'})" role="button" aria-expanded="false">
+                                <i class="fa fa-list"></i>Lista ofert
+                            </a>
+                        </li>
+                        <li>
+                            <a class="btn purple" ui-sref="organization.ratings({id: 'my'})" role="button" aria-expanded="false">
+                                <i class="fa fa-bars"></i>Lista ewaluacji
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+
+        <div class="container regular-content">
+            <div class="left-panel pull-left" ng-show="!isList">
+                <div class="infobox">
+                    <span class="corner purple"></span>
+                    <div class="logo-container">
+                        <img ng-src="{{ getMediaUrl(organization.thumbnail_relation.filename, 'photo') }}" alt="Logo {{ organization.fullname }}">
+                    </div>
+                </div>
+            </div>
+
+            <div class="project-list profile pull-right container" ng-show="!isList">
+                <div class="important-content small col-md-6 col-xs-12 pull-right">
+                    <div class="col-xs-12">
+                        <h2><i class="fa fa-map-marker"></i>Adres i lokalizacja</h2>
+                        <p>{{ constructAddress() }}</p>
+                        <div class="map-container" ng-if="latLength">
+                            <ui-gmap-google-map center="mapLatLng" zoom="13" options="mapOptions">
+                                <ui-gmap-marker coords="markerPos" idkey="0">
+                                </ui-gmap-marker>
+                            </ui-gmap-google-map>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="short-content col-md-6 col-xs-12 container pull-left">
+                    <h2><i class="fa fa-info"></i>O organizacji</h2>
+                    <p ng-bind-html="organization.description"></p>
+
+                    <h2><i class="fa fa-random"></i>Koordynator ochotników</h2>
+                    <p>{{ organization.coordinator.first_name }} {{ organization.coordinator.last_name }}</p>
+
+                    <!--<h2><i class="fa fa-users"></i>Dołącz do naszych społeczności</h2>-->
+                    <!--<p>FB Follow | Twitter Follow | G+ Follow</p>-->
+
+                    <h2><i class="fa fa-envelope"></i>E-mail</h2>
+                    <p>{{ organization.coordinator.email }}</p>
+
+
+                    <h2><i class="fa fa-phone"></i>Telefon</h2>
+                    <p ng-show="organization.phonenumber">{{ organization.phonenumber }}</p>
+                    <p ng-show="!organization.phonenumber">Brak danych</p>
+
+                </div>
+
+                <!--<div class="short-content col-xs-12 container pull-left m-top-25">
+                    <h2><i class="fa fa-comment"></i>Ewaluacje ( <a ui-sref="organization.ratings({id: organization.id})">Zobacz wszystkie</a> )</h2>
+                    <div class="opinions row">
+                        <div class="col-sm-6 col-xs-12" ng-show="!organizationRatings.length">
+                            <div class="opinion orga">
+                                <p class="comment">
+                                    Ta organizacja nie otrzymała jeszcze żadnej opinii.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-xs-12" ng-repeat="evaluation in organizationRatings">
+                            <div class="opinion orga">
+                                <h4>
+                                    <a ui-sref="volunteer.profile({id:evaluation.volunteer})">{{evaluation.volunteer_first_name}} {{evaluation.volunteer_first_name}}:</a>
+                                    <p class="pull-right">
+                                        <rating ng-model="evaluation.rating" max="5" readonly="true" state-on="'fa fa-star yellow'" state-off="'fa fa-star'"></rating>
+                                        (Ocena: {{evaluation.rating | number:2}}/5)
+                                    </p>
+                                </h4>
+                                <p class="comment" ng-show="evaluation.testimonial && (isSelfProfile || evaluation.is_public)">
+                                    {{evaluation.testimonial}}
+                                </p>
+                                <p class="comment" ng-show="evaluation.testimonial && !(isSelfProfile || evaluation.is_public)">
+                                    Opis jest prywatny
+                                </p>
+                                <p class="comment" ng-show="!evaluation.testimonial" >
+                                    Brak opisu
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>-->
+            </div>
+
+            <div class="pull-right container option-tabs" ng-class="{'profile': isList, 'project-list': !isList}">
+                <ul class="nav nav-pills tabs">
+                    <li role="presentation" ng-class="{'active': tab == 'active'}">
+                        <a ng-click="setTab('active')">Rekrutacja ochotników</a>
+                        <span class="arrow" ng-show="tab == 'active'"></span>
+                    </li>
+                    <li role="presentation" ng-class="{'active': tab == 'inactive'}" ng-if="isSelfProfile || user.is_superuser">
+                        <a ng-click="setTab('inactive')">Oferty nieaktywne</a>
+                        <span class="arrow" ng-show="tab == 'inactive'"></span>
+                    </li>
+                    <li role="presentation" ng-class="{'active': tab == 'finished'}">
+                        <a ng-click="setTab('finished')">W realizacji</a>
+                        <span class="arrow" ng-show="tab == 'finished'"></span>
+                    </li>
+                    <li role="presentation" ng-class="{'active': tab == 'rejected'}" ng-if="isSelfProfile || user.is_superuser">
+                        <a ng-click="setTab('rejected')">Oferty wycofane</a>
+                        <span class="arrow" ng-show="tab == 'rejected'"></span>
+                    </li>
+                </ul>
+
+                <div class="container" ng-class="{'project-list': !isList}">
+                    <div class="short-content col-xs-12 container" ng-if="!isSelfProfile && !user.is_superuser">
+                        <div ng-class="{'project-posts': !isList}" offer-list offers="offers" limit="5" options="{'showCharts': true, 'status': 'active'}" ng-if="tab == 'active'"></div>
+                        <div ng-class="{'project-posts': !isList}" offer-list offers="offers" limit="5" options="{'showCharts': false, 'status': 'finished'}" ng-if="tab == 'finished'"></div>
+                    </div>
+                    <div class="short-content col-xs-12 container" ng-if="isSelfProfile || user.is_superuser">
+                        <div ng-class="{'project-posts': !isList}" offer-list offers="activeOffers" limit="5" options="{'showVolunteerCount': true, 'showEditFields': isSelfProfile}" type="orgPrivate" ng-if="tab == 'active'"></div>
+                        <div ng-class="{'project-posts': !isList}" offer-list offers="offers" limit="5" options="{'status': 'inactive'}" type="orgPrivate" ng-if="tab == 'inactive'"></div>
+                        <div ng-class="{'project-posts': !isList}" offer-list offers="offers" limit="5" options="{'status': 'finished'}" type="orgPrivate" ng-if="tab == 'finished'"></div>
+                        <div ng-class="{'project-posts': !isList}" offer-list offers="offers" limit="5" options="{'status': 'rejected'}" type="orgPrivate" ng-if="tab == 'rejected'"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div recommended-offers offers="promotedOffers" limit="4"></div>

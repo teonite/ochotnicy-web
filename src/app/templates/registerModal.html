@@ -1,0 +1,135 @@
+<!--
+
+Portal Ochotnicy - http://ochotnicy.pl
+
+Copyright (C) Pracownia badań i innowacji społecznych Stocznia
+
+Development: TEONITE - http://teonite.com
+
+-->
+<!-- rejestracja -->
+<div class="modal-header separator">
+    <button type="button" class="close" ng-click="cancel()">
+        <span aria-hidden="true">&times;</span><span class="sr-only">Zamknij okno</span>
+    </button>
+
+    <h2 class="modal-title" id="modal-reg-title">
+        Dołącz do społeczności Ochotników.
+    </h2>
+
+    <p ng-show="!formSuccess">
+        Aby dokonać rejestracji, wypełnij poniższe pola i zapoznaj się z regulaminem serwisu.<br/>
+        Możesz również zarejestrować się używając swojego konta z Facebooka lub Twittera.
+    </p>
+
+    <div class="row m-bottom-10" ng-show="!formSuccess">
+        <label ng-class="{'active': rulesAccepted}">
+                <span>
+                    <i class="fa" ng-class="{'fa-check': rulesAccepted}"></i>
+                    <input type="checkbox" name="regulamin-i-polityka" value="" class="pull-left" ng-model="rulesAccepted"/>
+                </span>
+            Zapoznałem się i akceptuję <a ui-sref="terms" target="_blank">Regulamin</a> serwisu oraz <a ui-sref="privacy" target="_blank">Politykę Prywatności</a>
+        </label>
+    </div>
+    <div class="row" ng-show="!formSuccess">
+        <label ng-class="{'active': policyAccepted}">
+                <span>
+                    <i class="fa" ng-class="{'fa-check': policyAccepted}"></i>
+                    <input type="checkbox" name="regulamin-i-polityka" value="" class="pull-left" ng-model="policyAccepted"/>
+                </span>
+            Na podstawie z art. 23 ust. 1 pkt. 1 ustawy z dnia 29 sierpnia 1997 r. o ochronie danych osobowych (Dz. U. z 2014 r. poz. 1182 j.t.), wyrażam zgodę na przetwarzanie
+            moich danych osobowych przez Fundację Stocznia oraz Prezydenta m.st. Warszawy w celach rejestracji w portalu i realizacji projektu „Ochotnicy warszawscy”.
+        </label>
+    </div>
+    <div class="row reg-choice" ng-if="bothAccepted()">
+        <ul>
+            <li class="col-sm-6 col-xs-12">
+                <label for="sposob-rejestracji">Wybierz sposób rejestracji:</label>
+            </li>
+            <li class="col-sm-6 col-xs-12">
+                <select name="sposob-rejestracji" class="border-input blue" id="sposob-rejestracji"
+                        ng-model="mode.type">
+                    <option value="dedicated">Dedykowane konto w serwisie</option>
+                    <option value="social">Rejestracja za pomocą serwisu społecznościowego</option>
+                </select>
+            </li>
+        </ul>
+    </div>
+</div>
+<div class="modal-body" ng-show="bothAccepted() && mode.type == 'dedicated'">
+    <form ng-submit="registerDedicated()" novalidate name="form">
+        <ul class="row">
+            <li class="col-sm-6 col-xs-12">
+                <label for="reg-login">Login:</label>
+            </li>
+            <li class="col-sm-6 col-xs-12">
+                <input type="text" name="login" class="border-input blue" id="reg-login" placeholder="Twój login"
+                       ng-model="user.username" ng-maxlength="30" required ng-pattern="/^[\w.@+-]+$/">
+                <div ng-messages="form.login.$error" ng-messages-include="errorMessages.html" ng-if="form.submitted || form.login.$dirty"></div>
+                <small>Jedno słowo, dozwolone litery, cyfry i znaki @ . + - _.</small>
+                <p ng-repeat="error in errors.username" class="validation red">
+                    {{error}}
+                </p>
+            </li>
+        </ul>
+        <ul class="row">
+            <li class="col-sm-6 col-xs-12">
+                <label for="reg-e-mail">E-mail:</label>
+            </li>
+            <li class="col-sm-6 col-xs-12">
+                <input type="email" name="email" class="border-input blue" id="reg-e-mail"
+                       placeholder="Twój e-mail" required ng-model="user.email">
+                <div ng-messages="form.email.$error" ng-messages-include="errorMessages.html" ng-if="form.submitted || form.email.$dirty"></div>
+                <p ng-repeat="error in errors.email" class="validation red">
+                    {{error}}
+                </p>
+            </li>
+        </ul>
+        <ul class="row">
+            <li class="col-sm-6 col-xs-12">
+                <label for="reg-password">Hasło:</label>
+            </li>
+            <li class="col-sm-6 col-xs-12">
+                <input type="password" name="password" class="border-input blue" id="reg-password"
+                       placeholder="Twoje hasło" ng-model="user.password" required>
+                <div ng-messages="form.password.$error" ng-messages-include="errorMessages.html" ng-if="form.submitted || form.password.$dirty"></div>
+                <p ng-repeat="error in errors.password" class="validation red">
+                    {{error}}
+                </p>
+            </li>
+        </ul>
+        <ul class="row">
+            <li class="col-sm-6 col-xs-12">
+                <label for="reg-password-repeat">Powtórz hasło:</label>
+            </li>
+            <li class="col-sm-6 col-xs-12">
+                <input type="password" name="verify" class="border-input blue" id="reg-password-repeat"
+                       placeholder="Powtórz Twoje hasło" required ng-model="verification" match="user.password">
+                <div ng-messages="form.verify.$error" ng-messages-include="errorMessages.html" ng-if="form.submitted || form.verify.$dirty"></div>
+            </li>
+        </ul>
+        <div class="reg-button">
+            <button class="btn big orange" type="submit" ng-show="!showLoader"><i class="fa fa-check"></i>Zarejestruj</button>
+            <button class="btn big orange" type="button" ng-show="showLoader"><div loader loader-style="'height: 50px; width: 60px;'"></div></button>
+        </div>
+    </form>
+</div>
+<div class="modal-body" ng-show="bothAccepted() && mode.type == 'social'">
+    <h3>Wybierz portal, którego użyjesz do logowania:</h3>
+
+    <p class="social">
+        <a ng-href="{{fbUrl}}" target="_self"><img src="img/icon_facebook_big.jpg" alt="Logowanie przez Facebook"></a>
+    </p>
+
+    <p class="social">
+        <a ng-href="{{twitterUrl}}" target="_self"><img src="img/icon_twitter_big.jpg" alt="Logowanie przez Twitter"></a>
+    </p>
+</div>
+<div class="modal-body" ng-show="formSuccess">
+    Rejestracja udana. <br>
+    Na Twojego e-maila: <span class="bold">{{user.email}}</span> zastała wysłana wiadomość z linkiem aktywacyjnym. Wejdź i potwierdź swoją rejestrację.
+</div>
+
+<div class="modal-footer" ng-show="!formSuccess">
+    <p>Posiadasz już konto? <a href="" ng-click="goToLogin()">Zaloguj się »</a></p>
+</div>

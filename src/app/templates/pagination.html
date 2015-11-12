@@ -1,0 +1,30 @@
+<!--
+
+Portal Ochotnicy - http://ochotnicy.pl
+
+Copyright (C) Pracownia badań i innowacji społecznych Stocznia
+
+Development: TEONITE - http://teonite.com
+
+-->
+<div class="pagination-wrapper">
+    <nav>
+        <ul class="pagination" ng-if="1 < pages.length">
+            <li ng-if="directionLinks" ng-class="{ disabled : pagination.current == 1 }">
+                <a href="" ng-click="setCurrent(pagination.current - 1)">
+                    <span aria-hidden="true">&laquo;</span><span class="responsive-hide"> Poprzednia strona</span>
+                </a>
+            </li>
+            <li ng-repeat="pageNumber in pages track by $index"
+                ng-class="{ active : pagination.current == pageNumber, disabled : pageNumber == '...' }">
+                <a href="" ng-click="setCurrent(pageNumber)">{{ pageNumber }}</a>
+            </li>
+
+            <li ng-if="directionLinks" ng-class="{ disabled : pagination.current == pagination.last }">
+                <a href="" ng-click="setCurrent(pagination.current + 1)">
+                    <span class="responsive-hide">Kolejna strona</span> <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</div>

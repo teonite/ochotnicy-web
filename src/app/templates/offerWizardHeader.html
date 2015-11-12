@@ -1,0 +1,31 @@
+<!--
+
+Portal Ochotnicy - http://ochotnicy.pl
+
+Copyright (C) Pracownia badań i innowacji społecznych Stocznia
+
+Development: TEONITE - http://teonite.com
+
+-->
+<h1>Dodawanie oferty - krok {{ step }}</h1>
+<ul class="nav nav-pills creating-steps">
+    <li role="presentation" ng-class="{'active': step == 1, 'complete': step > 1}">
+        <div ng-show="step == 1"><h2>1. Informacje o zadaniach</h2></div>
+        <div ng-show="step != 1">1. Informacje o zadaniach <i class="fa fa-check right" ng-show="step > 1"></i></div>
+        <span class="arrow" ng-show="step == 1"></span></li>
+    <li role="presentation" ng-class="{'active': step == 2, 'complete': step > 2}">
+        <div ng-show="step == 2"><h2>2. Kogo szukamy</h2></div>
+        <div ng-show="step != 2">2. Kogo szukamy <i class="fa fa-check right" ng-show="step > 2"></i></div>
+        <span class="arrow" ng-show="step == 2"></span></li>
+    </li>
+    <li role="presentation" ng-class="{'active': step == 3, 'complete': step > 3}">
+        <div ng-show="step == 3"><h2>3. Zdjęcie</h2></div>
+        <div ng-show="step != 3">3. Zdjęcie <i class="fa fa-check right" ng-show="step > 3"></i></div>
+        <span class="arrow" ng-show="step == 3"></span></li>
+    </li>
+    <li role="presentation" ng-class="{'active': step == 4, 'complete': step > 4}">
+        <div ng-show="step == 4"><h2>4. Pola do porozumienia</h2></div>
+        <div ng-show="step != 4">4. Pola do porozumienia <i class="fa fa-check right" ng-show="step > 4"></i></div>
+        <span class="arrow" ng-show="step == 4"></span></li>
+    </li>
+</ul>

@@ -1,0 +1,51 @@
+<div class="media post row" ng-show="!offers.length">
+    <p class="search-comment">Brak ofert</p>
+</div>
+<div class="media post row" dir-paginate="offer in offers | itemsPerPage: limit" ng-show="offers.length">
+    <a class="media-left" ui-sref="offer.details({ id: offer.id })">
+        <img ng-src="{{ getMediaUrl(offer.small_thumbnail_relation.filename, 'photo') }}" alt="{{ offer.title }}">
+    </a>
+    <div class="media-body">
+        <h3><a ui-sref="offer.details({ id: offer.id })">{{ offer.title }}</a></h3>
+        <div class="row details">
+            <div class="col-sm-6 col-xs-12">
+                <p class="data">
+                    Data zakończenia:
+                    <span><span>{{ offer.publish_to | amDateFormat:'DD.MM.YYYY' }}</span></span>
+                </p>
+                <p class="data">
+                    Data dodania:
+                    <span><span>{{ offer.publish_from | amDateFormat:'DD.MM.YYYY'}}</span></span>
+                </p>
+            </div>
+            <div class="col-sm-6 col-xs-12" ng-if="options.showVolunteerCount">
+                <p class="data">
+                    Wolontariusze
+                    <span><span class="text-green">{{ offer.acceptedVolunteers }}</span> zaakceptowanych</span>
+                    <span><span class="text-blue">{{ offer.waitingVolunteers }}</span> oczekujących</span>
+                    <span><span class="text-red">{{ offer.rejectedVolunteers }}</span> odrzuconych</span>
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="media-right">
+        <div class="media-right dropdown-list big-circle" dropdown ng-if="options.showEditFields">
+            <div class="circle-button gray dropdown-toggle" dropdown-toggle role="button" aria-expanded="false">
+                <a><i class="fa fa-gear margin"></i>Opcje<span class="hidden-text"> względem oferty</span></a>
+            </div>
+            <ul class="dropdown-menu from-left" role="menu">
+                <li class="corner blue right"></li>
+                <li>
+                    <a class="btn blue" ui-sref="offer.edit({step: 1, id: offer.id})"><i class="fa fa-pencil"></i>Edytuj ofertę</a>
+                    <a class="btn blue" ui-sref="offer.agreement.template({id: offer.id})"><i class="fa fa-file-text-o"></i>Szablon umowy</a>
+                    <a class="btn blue" ui-sref="offer.certificate.template({id: offer.id})"><i class="fa fa-file-text-o"></i>Szablon certyfikatu</a>
+                    <a class="btn blue" ui-sref="offer.agreement.details({id: offer.id})"><i class="fa fa-th-large"></i>Pola do porozumienia</a>
+                </li>
+            </ul>
+        </div>
+        <div class="media-right circle-button">
+            <a ui-sref="offer.details({ id: offer.id })">Szczegóły <span class="hidden-text">na temat: {{ offer.title }}</span></a>
+        </div>
+    </div>
+</div>
+<dir-pagination-controls></dir-pagination-controls>

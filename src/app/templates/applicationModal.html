@@ -1,0 +1,26 @@
+<!--
+
+Portal Ochotnicy - http://ochotnicy.pl
+
+Copyright (C) Pracownia badań i innowacji społecznych Stocznia
+
+Development: TEONITE - http://teonite.com
+
+-->
+<!-- logowanie -->
+
+<div class="modal-header separator">
+    <button type="button" class="close" ng-click="cancel()"><span aria-hidden="true">&times;</span><span
+            class="sr-only">Zamknij okno</span></button>
+    <h2 class="modal-title" id="modal-login-title">Potwierdzenie chęci dołączenia do ogłoszenia: {{ offer.title }}</h2>
+</div>
+<div class="modal-body">
+    <div ng-if="is_proceeded">Proszę czekać...</div>
+    <div ng-if="success">
+        <p>Dziękujemy za przesłanie zgłoszenia na ofertę: <strong>{{ offer.title }}</strong>.</p>
+        <p>Informacja o Twoim zgłoszeniu trafiła do organizatora wolontariatu: <strong>{{ offer.publishing_organization.fullname }}</strong>. Organizator jest zobowiązany do odpowiedzi na zgłoszenie w ciągu 7 dni po zakończeniu rekrutacji. Jeśli nie otrzymasz odpowiedzi prosimy o kontakt.</p>
+    </div>
+    <div ng-if="notExtended"><strong>Aby dołączyć do projektu, musisz uzupełnić szczegółowe dane w profilu.</strong><br />
+    Zostaniesz tam przekierowany.</div>
+    <div ng-if="fail">Nie udało się wysłać zgłoszenia.</div>
+</div>

@@ -1,0 +1,39 @@
+<!--
+
+Portal Ochotnicy - http://ochotnicy.pl
+
+Copyright (C) Pracownia badań i innowacji społecznych Stocznia
+
+Development: TEONITE - http://teonite.com
+
+-->
+<div class="modal-header separator">
+    <button type="button" class="close" ng-click="cancel()"><span aria-hidden="true">&times;</span><span class="sr-only">Zamknij okno</span></button>
+    <h2 class="modal-title" id="modal-login-title">Zmiana statusu zgłoszenia</h2>
+    <div class="important-content yellow msg m-bottom-30" ng-show="!is_proceeded && !(success || fail)">
+        <p>Oceń zgłoszenie wolontariusza wypełniając poniższe pole. Wiadomość wpisana poniżej zostanie wysłana do Ochotnika. W przypadku odrzucania danego zgłoszenia, krótki opis decyzji jest wymagany</p>
+        <div class="corner-arrow"></div>
+    </div>
+</div>
+<form ng-submit="sendApplication()" novalidate name="form">
+    <div class="modal-body" ng-show="!is_proceeded && !(success || fail)">
+        <h3 class="normal">Opisz w kilku zdaniach swoją decyzję:</h3>
+        <ul class="row m-bottom-10">
+            <li class="col-xs-12">
+                <textarea class="textarea" id="message" placeholder="Dlaczego?"
+                          ng-model="message" ng-maxlength="500" ng-minlength="20" name="reason" ui-tinymce="tinymceOptions" ng-required="status == 2"></textarea>
+                <div ng-messages="form.reason.$error" ng-messages-include="errorMessages.html" ng-if="form.submitted || form.reason.$dirty"></div>
+            </li>
+        </ul>
+    </div>
+    <div class="modal-body" ng-if="is_proceeded">Proszę czekać...</div>
+    <div class="modal-body" ng-if="success">
+        <p class="validation green">Zgłoszenie zostało przeprocesowane.</p>
+    </div>
+    <div class="modal-body" ng-if="fail">
+        <p class="validation red">Wystąpił błąd podczas aktualizacji zgłoszenia.</p>
+    </div>
+    <div class="modal-footer text-center" ng-show="!is_proceeded && !(success || fail)">
+        <button type="submit" class="btn big green"><i class="fa fa-check-square-o"></i>Wyślij</button>
+    </div>
+</form>

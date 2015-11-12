@@ -1,0 +1,133 @@
+<!--
+
+Portal Ochotnicy - http://ochotnicy.pl
+
+Copyright (C) Pracownia badań i innowacji społecznych Stocznia
+
+Development: TEONITE - http://teonite.com
+
+-->
+<div class="main-content-section">
+
+    <div class="container">
+
+        <div class="title-bar preview negative-top">
+            <h1>Panel Administracyjny - Dashboard</h1>
+        </div>
+
+        <div class="container regular-content">
+            <div class="container dashboard-section">
+                <div class="col-md-6 col-xs-12">
+                    <div class="col-xs-6 title">
+                        <div class="section-header row">
+                            <h2>Oferty</h2>
+
+                            <p>{{metrics.offers_count | number:0}}<i class="fa fa-file-text orange"></i></p>
+                        </div>
+                    </div>
+                    <div class="col-xs-6 chart more">
+                        <h3>Nowe oferty <span>(ostatnie 7 dni)</span></h3>
+
+                        <div class="circle-button orange">
+                            <a ui-sref="admin.offers">
+                                {{metrics.offers_from_last_week | number:0}}
+                                <span ui-sref="admin.offers">Zobacz</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-xs-12">
+                    <div class="col-xs-6 chart">
+                        <h3>Aktywne oferty</h3>
+
+                        <div class="circle-button orange border">
+                            <a>{{metrics.offers_not_ended | number:0}}</a>
+                        </div>
+                    </div>
+                    <div class="col-xs-6 chart">
+                        <h3>Zakończone oferty</h3>
+
+                        <div class="circle-button orange border">
+                            <a>{{metrics.offers_ended | number:0}}</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="container dashboard-section">
+                <div class="col-md-6 col-xs-12">
+                    <div class="col-xs-6 title">
+                        <div class="section-header row">
+                            <h2>Organizacje</h2>
+
+                            <p>{{metrics.orgs_count | number:0}}<i class="fa fa-globe purple"></i></p>
+                        </div>
+                    </div>
+                    <div class="col-xs-6 chart more">
+                        <h3>Nowe organizacje <span>(ostatnie 7 dni)</span></h3>
+
+                        <div class="circle-button purple">
+                            <a ui-sref="admin.organizations">
+                                {{metrics.orgs_from_last_week | number:0}}
+                                <span ui-sref="admin.organizations">Zobacz</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-xs-12">
+                    <div class="col-xs-6 chart">
+                        <h3>Organizacje z aktywnymi ofertami</h3>
+
+                        <div class="circle-button purple border">
+                            <a>{{metrics.orgs_with_offers | number:0}}</a>
+                        </div>
+                    </div>
+                    <div class="col-xs-6 chart">
+                        <h3>Ogranizacje bez aktywnych ofert</h3>
+
+                        <div class="circle-button purple border">
+                            <a>{{metrics.orgs_without_offers | number:0}}</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="container dashboard-section">
+                <div class="col-md-6 col-xs-12">
+                    <div class="col-xs-6 title">
+                        <div class="section-header row">
+                            <h2>Wolontariusze</h2>
+
+                            <p>{{metrics.volunteers_count | number:0}}<i class="fa fa-users blue"></i></p>
+                        </div>
+                    </div>
+                    <div class="col-xs-6 chart more">
+                        <h3>Nowi wolontariusze <span>(ostatnie 7 dni)</span></h3>
+
+                        <div class="circle-button blue">
+                            <a ui-sref="admin.volunteers">
+                                {{metrics.volunteers_from_last_week | number:0}}
+                                <span ui-sref="admin.volunteers">Zobacz</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-xs-12">
+                    <div class="col-xs-6 chart">
+                        <h3>Wolontariusze z aplikacjami</h3>
+
+                        <div class="circle-button blue border">
+                            <a>{{metrics.volunteers_with_apps | number:0}}</a>
+                        </div>
+                    </div>
+                    <div class="col-xs-6 chart">
+                        <h3>Wolontariusze bez aplikacji</h3>
+
+                        <div class="circle-button blue border">
+                            <a>{{metrics.volunteers_without_apps | number:0}}</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

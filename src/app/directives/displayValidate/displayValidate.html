@@ -1,0 +1,7 @@
+<span>
+    <i class="fa fa-check green" ng-if="(required || edit) && element.$valid"></i>
+    <i class="fa fa-check green" ng-if="!required && !edit && !element.$pristine && element.$valid"></i>
+    <i class="fa fa-close red" ng-if="!edit && !element.$pristine && element.$invalid"></i>
+    <i class="fa fa-close red" ng-if="edit && element.$invalid"></i>
+    <i class="fa fa-asterisk default" ng-if="required && !edit && !modelCopy.length && element.$pristine && !element.$valid"></i>
+</span>

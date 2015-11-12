@@ -1,0 +1,29 @@
+<div class="recommended-section" ng-show="offers.length">
+    <div class="container">
+        <div class="section-header row">
+            <h2 class="pull-left">Polecane <span class="corner-big"></span></h2>
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-3" ng-repeat="offer in offers | limitTo:limit">
+            <div class="recommended-post">
+                <div class="content">
+                    <div class="photo">
+                        <img ng-src="{{ getMediaUrl(offer.promoted_thumbnail_relation.filename, 'photo') }}" alt="Tytuł oferty">
+                    </div>
+
+                    <h3><a ui-sref="offer.details({ id: offer.id })">{{ offer.title }}</a></h3>
+
+                    <p>{{ offer.publishing_organization }}</p>
+                </div>
+                <div class="details">
+                    <p>
+                        <span class="hidden-text">Pozostało miejsc: </span>
+                        <span>{{ offer.volunteers_joined_count }}</span> / {{ offer.volunteer_max_count }}
+                    </p>
+                    <a class="btn small gray" ui-sref="offer.details({ id: offer.id })" type="button">
+                        Szczegóły <span class="hidden-text">na temat: {{ offer.title }}</span><i class="fa fa-chevron-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

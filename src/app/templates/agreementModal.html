@@ -1,0 +1,29 @@
+<!--
+
+Portal Ochotnicy - http://ochotnicy.pl
+
+Copyright (C) Pracownia badań i innowacji społecznych Stocznia
+
+Development: TEONITE - http://teonite.com
+
+-->
+<!-- logowanie -->
+
+<div class="modal-header separator">
+    <button type="button" class="close" ng-click="cancel()"><span aria-hidden="true">&times;</span><span
+            class="sr-only">Zamknij okno</span></button>
+    <h2 class="modal-title" id="modal-login-title">Generowanie {{displayName}}...</h2>
+</div>
+<div class="modal-body">
+    <div ng-if="is_proceeded">Proszę czekać...</div>
+    <div ng-if="!is_proceeded">
+        <div ng-if="success">Wygenerowano. <a ng-href="{{getMediaUrl('/media/' + agreementLink)}}" download target="_blank">Link</a></div>
+        <div ng-if="tasks">Nie wypełniono zadań w <a ng-click="goToOfferDetails()">widoku opcji oferty</a></div>
+        <div ng-if="time">Nie upłynął jeszcze czas prezentacji oferty, nie można wygenerować {{displayName}}</div>
+        <div ng-if="offerFields">Nie wypełniono wszystkich wymaganych pól oferty.</div>
+        <div ng-if="offerPublished">Oferta nie została opublikowana.</div>
+        <div ng-if="fail">Nie udało się wygenerować {{displayName}}.</div>
+    </div>
+</div>
+
+

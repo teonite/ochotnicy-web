@@ -1,0 +1,60 @@
+<!--
+
+Portal Ochotnicy - http://ochotnicy.pl
+
+Copyright (C) Pracownia badań i innowacji społecznych Stocznia
+
+Development: TEONITE - http://teonite.com
+
+-->
+<div class="main-content-section">
+    <div class="container">
+        <div class="container regular-content negative-top">
+
+            <div class="container">
+                <div class="short-content col-xs-12 container">
+
+                    <div class="section-header row">
+                        <h2 class="pull-left">Aktualności<span class="corner-big"></span></h2>
+                        <div class="pull-right">
+                            <form>
+                                <label for="sortowanie">Sortowanie:</label>
+                                <select ng-model="ordering" ng-options="option as option.name for option in orderingOptions" name="sortuj-po" class="border-input" id="sortowanie"></select>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="project-posts news">
+                        <div class="media post row" dir-paginate="news in newsList | orderBy:ordering.field | itemsPerPage: 5">
+                            <a class="media-left" ui-sref="news.details({id: news.id})">
+                                <img ng-src="{{getMediaUrl(news.news_thumbnail.filename, 'photo')}}" alt="{{news.title}} - zdjęcie">
+                            </a>
+                            <div class="media-body">
+                                <p class="who">
+                                    <span>{{news.created_by.first_name}} {{news.created_by.last_name}}</span>, {{news.created_at | amDateFormat:'DD.MM.YYYY - H:mm:ss '}}
+                                </p>
+                                <h3>
+                                    <a ui-sref="news.details({id: news.id})">{{news.title}}</a>
+                                </h3>
+                                <p>
+                                    {{news.body | htmlToPlaintext | limitTo: 130}}<span ng-if="news.body.length > 130">...</span>
+                                </p>
+                            </div>
+                            <div class="media-right circle-button">
+                                <div class="media-right big-circle">
+                                    <div class="circle-button gray">
+                                        <a ui-sref="news.details({id: news.id})">Czytaj<span class="hidden-text"> {{news.title}}</span> <i class="fa fa-angle-double-right"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <dir-pagination-controls></dir-pagination-controls>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<div recommended-offers offers="promotedOffers" limit="4"></div>

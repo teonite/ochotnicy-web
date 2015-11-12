@@ -1,0 +1,87 @@
+<!--
+
+Portal Ochotnicy - http://ochotnicy.pl
+
+Copyright (C) Pracownia badań i innowacji społecznych Stocznia
+
+Development: TEONITE - http://teonite.com
+
+-->
+<div class="main-content-section">
+    <div class="container">
+        <div class="search-bar negative-top">
+            <div class="input-group">
+                        <label for="szukaj-projektu">Wyszukaj oferty dla siebie wpisując nazwę organizacji, zadania lub lokalizację:</label>
+                        <input type="text" placeholder="Wyszukaj oferty dla siebie wpisując nazwę organizacji, zadania lub lokalizację" class="form-control search-input" id="szukaj-projektu"
+                                ng-model="searchPhrase" ng-keyup="$event.keyCode == 13 && update()">
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" type="button" ng-show="!searchActive" ng-disabled="!searchPhrase.length" ng-class="{'disabled': !searchPhrase.length}" ng-click="update()">Wyszukaj<i class="fa fa-search"></i></button>
+                            <button class="btn btn-default" type="button" ng-show="searchActive" ng-click="clearSearch()">Wyczyść<i class="fa fa-times "></i></button>
+                            <span class="corner purple-right"></span>
+                        </span>
+                    </div>
+        </div>
+
+        <div class="container">
+            <div class="left-menu pull-left">
+                <ul>
+                    <li class="hidden-text">Wybór kategorii:</li>
+                    <li><a class="all" ng-click="clearFilters()" ng-class="{'active': !activeFilters.length}">Wszystkie<span class="left-arrow white"></span></a></li>
+                    <li ng-repeat="filter in filteringOptions | orderBy:'id'">
+                        <a class="{{filter.class}}" ng-click="toogleFilter(filter.id)" ng-class="{'active': checkFilter(filter.id)}">{{filter.name}}<span class="left-arrow white"></span></a>
+                    </li>
+                </ul>
+            </div>
+            <div class="project-list main pull-left container">
+                <div class="section-header row">
+                    <h1 class="pull-left">Oferty <span class="corner-big"></span></h1>
+
+                    <div class="pull-right">
+                        <form>
+                            <label for="sortowanie">Sortuj po:</label>
+                            <select ng-model="ordering" ng-options="option as option.name for option in orderingOptions" name="sortuj-po" class="border-input" id="sortowanie">
+                            </select>
+                        </form>
+                    </div>
+                </div>
+                <div class="project-posts main-offer-list">
+                    <div class="search-comment" ng-show="!offerList.length">Nie znaleziono żadnych ogłoszeń</div>
+                    <div loader ng-show="showLoader" show-text="false" loader-style="'width: 150px; height: 90px; margin: 30px auto;'"></div>
+                    <div class="media post row" dir-paginate="offer in offerList | orderBy:ordering.field | itemsPerPage: projectsLimit" ng-show="!showLoader" ng-class="{'my-offer': offer.publishing_organization.id == user.organization_id}">
+                        <div class="left-arrow"></div>
+                        <a class="media-left" href="#">
+                            <img ng-src="{{ getMediaUrl(offer.small_thumbnail_relation.filename, 'photo') }}"
+                                 alt="Klucz do jutra dla dzieci z trudnościami edukacyjnymi - poszukujemy wolontariuszy">
+                        </a>
+
+                        <div class="media-body">
+                            <h3><a ui-sref="offer.details({ id: offer.id })">{{ offer.title }}</a></h3>
+
+                            <p><a href="" ui-sref="organization.profile({id: offer.publishing_organization.id})">{{ offer.publishing_organization.fullname }}</a></p>
+                            <ul class="tags">
+                                <li class="hidden-text">Tagi:</li>
+                                <li ng-repeat="category in offer.category"><a href="" ng-click="toogleFilter(category.id)">{{ category.name }}</a></li>
+                            </ul>
+                        </div>
+                        <div class="media-right">
+                            <div class="media-right circle-info circle-hide">
+                                <canvas doughnutchart data="offer.timeChartData" options="chartOptions" alt="Wykres" width="90" height="90"></canvas>
+                                <a ui-sref="offer.details({ id: offer.id })"><h3>Pozostało</h3> <span am-time-ago="offer.publish_to" am-without-suffix="true"></span></a>
+                            </div>
+                            <div class="media-right circle-info circle-hide">
+                                <canvas doughnutchart data="offer.volunteersChartData" options="chartOptions" alt="Wykres" width="90" height="90"></canvas>
+                                <a ui-sref="offer.details({ id: offer.id })"><h3>Wolontariuszy</h3> <span>{{ offer.volunteers_joined_count }} / {{ offer.volunteer_max_count }}</span></a>
+                            </div>
+                            <div class="media-right circle-button">
+                                <a ui-sref="offer.details({ id: offer.id })">Szczegóły <span class="hidden-text">na temat: {{ offer.title }}</span></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <dir-pagination-controls></dir-pagination-controls>
+            </div>
+        </div>
+    </div>
+</div>
+<div recommended-offers offers="promotedOffers" limit="4"></div>

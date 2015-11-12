@@ -1,0 +1,126 @@
+<!--
+
+Portal Ochotnicy - http://ochotnicy.pl
+
+Copyright (C) Pracownia badań i innowacji społecznych Stocznia
+
+Development: TEONITE - http://teonite.com
+
+-->
+<div class="main-content-section">
+    <div class="container">
+        <div class="title-bar negative-top">
+            <div class="tags-social"></div>
+            <h1>Dodaj nową aktualność</h1>
+            <ul class="nav nav-pills join">
+                <li role="presentation" class="dropdown" dropdown>
+                    <a class="dropdown-toggle btn purple" dropdown-toggle role="button" aria-expanded="false">
+                        <i class="fa fa-cog left"></i>Opcje<span class="corner left"></span>
+                    </a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li>
+                            <a class="btn purple" ng-click="submit()" role="button" aria-expanded="false"><i class="fa fa-pencil left"></i> Zapisz zmiany</a>
+                        </li>
+                        <li>
+                            <a class="btn purple" ng-click="doTheBack()" role="button" aria-expanded="false"><i class="fa fa-times left"></i> Anuluj zmiany</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+
+        <div class="container regular-content">
+            <div class="full-width container">
+                <div class="registration-finish row">
+                    <form ng-submit="submit()" novalidate name="form">
+                        <h2>Dane podstawowe<span> (<i class="fa fa-asterisk default"></i> - pola wymagane)</span></h2>
+
+                        <div class="row">
+                            <table class="col-md-9 col-xs-12">
+                                <tr>
+                                    <td class="col-xs-4"><label for="title">Tytuł</label></td>
+                                    <td class="col-xs-7">
+                                        <input type="text" placeholder="Tytuł wiadomości" name="title" ng-minlength="2" ng-maxlength="255"
+                                               id="title" ng-model="news.title"
+                                               class="border-input" ng-required="true">
+                                        <div ng-messages="form.orgFullname.$error" ng-messages-include="errorMessages.html" ng-if="form.submitted || form.title.$dirty"></div>
+                                    </td>
+                                    <td class="col-xs-1">
+                                        <display-validate element="form.title" model="news.title" required="true" edit="isEdited"></display-validate>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-xs-4"><label for="body">Treść</label>
+                                    </td>
+                                    <td class="col-xs-7">
+                                        <textarea placeholder="Treść wiadomości" id="body" name="body" ng-minlength="30" ng-maxlength="1000"
+                                                  class="textarea" ng-required="true" ng-model="news.body" ui-tinymce="tinymceOptions"></textarea>
+                                        <div ng-messages="form.body.$error" ng-messages-include="errorMessages.html" ng-if="form.submitted || form.body.$dirty"></div>
+                                    </td>
+                                    <td class="col-xs-1">
+                                        <display-validate element="form.body" model="news.body" required="true" edit="isEdited"></display-validate>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <h2>Zdjęcie</h2>
+
+                        <div class="row registration-finish steps">
+                            <table class="col-md-11 col-xs-12 row">
+                                <tr>
+                                    <td class="col-xs-12 col-md-6">
+                                        <div id="offer-image">
+                                            <div class="image">
+                                                <input type="file" accept="image/jpeg,image/gif,image/png" ng-multiple="false"
+                                                        ng-model="file" ng-file-select="onFileSelect($files)" ng-disabled="!news.id">
+                                                <img ng-src="{{ getMediaUrl(filename, 'photo') }}" ng-show="filename && !(uploadFailed || fileTooBig)">
+                                                <span ng-show="uploadFailed">Upload zdjęcia nie powiódł się.</span>
+                                                <span ng-show="fileTooBig">Wybrane zdjęcie jest zbyt duże.</span>
+                                                <span ng-show="!filename && news.id">Dodaj zdjęcie (max 5MB)</span>
+                                                <span ng-show="!filename && !news.id">Aby dodać zdjęcie, zapisz najpierw wiadomość</span>
+                                                <div class="progress" ng-show="progressBar && !(uploadFailed || fileTooBig)">
+                                                    <div class="progress-bar" role="progressbar" aria-valuenow="{{ progress }}"
+                                                         ng-class="{'progress-bar-success': uploadSuccess, 'progress-bar-danger': uploadFailed}"
+                                                         aria-valuemin="0" aria-valuemax="100" style="width: {{ progress }}%;">
+                                                        {{ progress }}%
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="col-xs-12 col-md-5">
+                                        <div class="comment">
+                                            <p>Dodaj zdjęcie, które będzie widoczne na stronie.</p>
+
+                                            <p>Upewnij się, że posiadasz prawa autorskie do wykorzystania zdjęcia oraz zgody
+                                                osób widocznych na zdjęciu.</p>
+
+                                            <p class="req-list">
+                                                Minimalne wymiary: <span>350x218</span><br>
+                                                Format: <span>JPEG, PNG</span><br>
+                                                Maksymalny rozmiar: <span>5MB</span>
+                                            </p>
+                                            <span class="corner white-right"></span>
+                                            <span class="arrow"></span>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <div class="sub-bar">
+                            <p ng-show="error">Wystąpiły błędy podczas zapisu.</p>
+                            <p ng-show="success">Zmiany zostały zapisane</p>
+                            <button class="btn orange" type="button" ng-click="doTheBack()" ng-show="success"><i class="fa fa-angle-double-left left"></i>Powrót</button>
+                            <button class="btn orange" type="submit" ng-show="!success && !showLoader"><i class="fa fa-check"></i>Zapisz zmiany</button>
+                            <button class="btn orange" type="submit" ng-show="showLoader" ng-disabled="true">
+                                <div loader loader-style="'height: 25px; width: 40px;'"></div>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

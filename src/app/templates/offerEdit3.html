@@ -1,0 +1,79 @@
+<!--
+
+Portal Ochotnicy - http://ochotnicy.pl
+
+Copyright (C) Pracownia badań i innowacji społecznych Stocznia
+
+Development: TEONITE - http://teonite.com
+
+-->
+<div class="main-content-section">
+    <div class="container">
+        <div class="title-bar negative-top" wizard-header url="offerWizardHeader.html" step="3"></div>
+
+        <div class="container regular-content">
+            <div class="full-width container">
+                <div class="row registration-finish steps">
+                    <table class="col-md-11 col-xs-12 row">
+                        <tr>
+                            <td class="col-xs-12 col-md-6">
+                                <div id="offer-image">
+                                    <div class="image">
+                                        <input type="file" accept="image/jpeg,image/gif,image/png" ng-multiple="false"
+                                                ng-model="file" ng-file-select="onFileSelect($files)">
+                                        <img ng-src="{{ getMediaUrl(filename, 'photo') }}" ng-show="filename && !(uploadFailed || fileTooBig)">
+                                        <span ng-show="uploadFailed">Upload zdjęcia nie powiódł się.</span>
+                                        <span ng-show="fileTooBig">Wybrane zdjęcie jest zbyt duże.</span>
+                                        <span ng-show="!filename">Dodaj zdjęcie (max 5MB)</span>
+                                        <div class="progress" ng-show="progressBar && !(uploadFailed || fileTooBig)">
+                                            <div class="progress-bar" role="progressbar" aria-valuenow="{{ progress }}"
+                                                 ng-class="{'progress-bar-success': uploadSuccess, 'progress-bar-danger': uploadFailed}"
+                                                 aria-valuemin="0" aria-valuemax="100" style="width: {{ progress }}%;">
+                                                {{ progress }}%
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="col-xs-12 col-md-5">
+                                <div class="comment">
+                                    <p>Zamieść zdjęcie, które  będzie zachęcało i informowało wolontariuszy o twojej ofercie.</p>
+
+                                    <p>Upewnij się, że posiadasz prawa autorskie do wykorzystania zdjęcia oraz zgody
+                                        osób widocznych na zdjęciu.</p>
+
+                                    <p class="req-list">
+                                        Minimalne wymiary: <span>350x218</span><br>
+                                        Format: <span>JPEG, PNG</span><br>
+                                        Maksymalny rozmiar: <span>5MB</span>
+                                    </p>
+                                    <span class="corner white-right"></span>
+                                    <span class="arrow"></span>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="sub-bar menu">
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-5">
+                            <button class="btn options white" ui-sref="offer.list">
+                                Anuluj tworzenie projektu<i class="fa fa-close right"></i>
+                            </button>
+                        </div>
+                        <div class="col-xs-12 col-sm-7 right">
+                            <button class="btn options white responsive-big" ng-click="goToStep(2)">
+                                <i class="fa fa-chevron-left left"></i>Poprzedni krok
+                            </button>
+                            <button class="btn options orange responsive-big" ng-click="submit()">
+                                Kolejny krok <i class="fa fa-chevron-right right"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div recommended-offers offers="promotedOffers" limit="4"></div>

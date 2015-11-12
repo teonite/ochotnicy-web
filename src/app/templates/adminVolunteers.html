@@ -1,0 +1,97 @@
+<!--
+
+Portal Ochotnicy - http://ochotnicy.pl
+
+Copyright (C) Pracownia badań i innowacji społecznych Stocznia
+
+Development: TEONITE - http://teonite.com
+
+-->
+        <div class="main-content-section">
+
+            <div class="container">
+
+                <div class="title-bar preview negative-top">
+                    <h1>Lista użytkowników</h1>
+                </div>
+
+                <div class="container regular-content">
+
+                    <div class="container">
+                        <div class="short-content col-xs-12 container">
+
+                            <div class="section-header row">
+                                <h2 class="pull-left m-bottom-20">Użytkownicy portalu <span class="number">({{volunteers.length}})</span>
+                                    <span class="corner-big"></span>
+                                </h2>
+
+                                <div class="pull-right res-new-line">
+                                    <label for="sortowanie">Sortowanie:</label>
+                                    <select ng-model="ordering" ng-options="option as option.name for option in orderingOptions" name="sortuj-po" class="border-input" id="sortowanie">
+                                </div>
+                            </div>
+
+                            <form>
+                                <div class="project-posts user-list">
+
+                                    <div class="media post row" dir-paginate="volunteer in volunteers | orderBy:ordering.field | itemsPerPage: 10">
+                                        <div class="media-left">
+                                            <div class="avatar">
+                                                <img ng-src="{{getMediaUrl(volunteer.thumbnail_relation.filename, 'user')}}" alt="Zdjęcie profilowe">
+                                            </div>
+                                        </div>
+                                        <div class="media-body">
+                                            <div class="row details">
+                                                <div class="col-md-4 col-sm-12 media-details">
+                                                    <h3><a ui-sref="volunteer.profile({id: volunteer.id})">{{volunteer.first_name}} {{volunteer.last_name}}</a></h3>
+                                                    <p>Wiek: <span am-time-ago="volunteer.birthday" am-without-suffix="true"></span></p>
+                                                    <!--<p>PESEL:-->
+                                                        <!--<span ng-show="volunteer.pesel.length">{{volunteer.pesel}}</span>-->
+                                                        <!--<span ng-show="!volunteer.pesel.length">Brak danych</span>-->
+                                                    <!--</p>-->
+                                                </div>
+                                                <div class="col-md-4 col-sm-6 col-xs-12 media-details">
+                                                    <p class="data header">Kontakt
+                                                        <span>E-mail: <a ng-href="mailto:{{volunteer.email}}">{{volunteer.email}}</a></span>
+                                                        <span>Telefon:
+                                                            <span ng-show="volunteer.phone.length">{{volunteer.phone}}</span>
+                                                            <span ng-show="!volunteer.phone.length">Brak danych</span>
+                                                        </span>
+                                                    </p>
+                                                </div>
+                                                <div class="col-md-4 col-sm-6 col-xs-12 media-details">
+                                                    <p class="data header">Aplikacje wolontariusza ( <a ui-sref="volunteer.profile({id:volunteer.id})">lista</a> )
+                                                        <span><span class="text-green">{{volunteer.acceptedVolunteers}}</span> zaakceptowanych</span>
+                                                        <span><span class="text-blue">{{volunteer.waitingVolunteers}}</span> oczekujących</span>
+                                                        <span><span class="text-red">{{volunteer.rejectedVolunteers}}</span> odrzuconych</span>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="media-right">
+                                            <div class="media-right dropdown-list" dropdown>
+                                                <div class="circle-button small-gray dropdown-toggle" dropdown-toggle role="button" aria-expanded="false">
+                                                    <a>Opcje<span class="hidden-text"> względem użytkownika</span></a>
+                                                </div>
+                                                <ul class="dropdown-menu from-left" role="menu">
+                                                    <li class="corner blue right"></li>
+                                                    <li>
+                                                        <a class="btn blue" ui-sref="volunteer.profile({id: volunteer.id})"><i class="fa fa-eye"></i>Zobacz profil</a>
+                                                        <!--<a class="btn blue"><i class="fa fa-envelope"></i>Wyślij wiadomość</a>-->
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </form>
+
+                        </div>
+
+                        <dir-pagination-controls></dir-pagination-controls>
+
+                    </div>
+                </div>
+            </div>
+        </div>

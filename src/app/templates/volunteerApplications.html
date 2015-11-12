@@ -1,0 +1,71 @@
+<!--
+
+Portal Ochotnicy - http://ochotnicy.pl
+
+Copyright (C) Pracownia badań i innowacji społecznych Stocznia
+
+Development: TEONITE - http://teonite.com
+
+-->
+<div class="main-content-section">
+    <div class="container">
+
+        <div id="sticky-anchor"></div>
+        <div id="sticky" class="title-bar negative-top">
+            <h1>{{volunteer.first_name}} {{volunteer.last_name}}<span class="text-hide"> (lista aplikacji)</span></h1>
+            <a href="" class="btn purple join" ui-sref="volunteer.profile({id: 'my'})">
+                <i class="fa fa-backward"></i>powrót do profilu <span class="corner left"></span>
+            </a>
+        </div>
+
+        <div class="container regular-content">
+            <div class="pull-right container profile option-tabs">
+                <div class="project-posts">
+                    <ul class="nav nav-pills tabs">
+                        <li role="presentation" ng-class="{'active': tab == 'my'}">
+                            <a ng-click="setTab('my')">Moje oferty</a>
+                            <span class="arrow" ng-show="tab == 'my'"></span>
+                        </li>
+                        <li role="presentation" ng-class="{'active': tab == 'archive'}">
+                            <a ng-click="setTab('archive')">Oferty archiwalne</a>
+                            <span class="arrow" ng-show="tab == 'archive'"></span>
+                        </li>
+                        <li role="presentation" ng-class="{'active': tab == 'rejected'}">
+                            <a ng-click="setTab('rejected')">Odrzucenia</a>
+                            <span class="arrow" ng-show="tab == 'rejected'"></span>
+                        </li>
+                    </ul>
+                    <div ng-show="tab == 'my'" class="container">
+                        <div class="short-content col-xs-12 container">
+                            <div class="section-header row">
+                                <h2 class="pull-left">Zaakceptowane <span class="number">({{acceptedApplications.length}})</span><span class="corner-big"></span></h2>
+                            </div>
+                            <div class="short-content col-xs-12 container m-bottom-10">
+                                <div offer-list offers="acceptedApplications" limit="5" options="{showApplicationDate: true, showAgreeMessage: true}" type="volPrivate"></div>
+                            </div>
+                            <div class="section-header row">
+                                <h2 class="pull-left">Oczekujące na zaakceptowanie <span class="number">({{pendingApplications.length}})</span>
+                                    <span class="corner-big"></span>
+                                </h2>
+                            </div>
+                            <div class="project-posts">
+                                <div offer-list offers="pendingApplications" limit="5" options="{showApplicationDate: true}" type="volPrivate"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div ng-show="tab == 'archive'" class="container">
+                        <div class="short-content col-xs-12 container">
+                            <div offer-list offers="archiveApplications" limit="5" options="{showApplicationDate: true, showAgreementDate: true, showTestimonial: true, getAgreement: getAgreement, openRatingModal: openRatingModal, showDownloadButtons: true}" type="volPrivate"></div>
+                        </div>
+                    </div>
+                    <div ng-show="tab == 'rejected'" class="container">
+                        <div class="short-content col-xs-12 container">
+                            <div offer-list offers="rejectedApplications" limit="5" options="{showRejectMessage: true}" type="volPrivate"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div recommended-offers offers="promotedOffers" limit="4"></div>

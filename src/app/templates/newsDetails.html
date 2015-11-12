@@ -1,0 +1,43 @@
+<!--
+
+Portal Ochotnicy - http://ochotnicy.pl
+
+Copyright (C) Pracownia badań i innowacji społecznych Stocznia
+
+Development: TEONITE - http://teonite.com
+
+-->
+<div class="main-content-section">
+    <div class="container">
+        <div class="title-bar negative-top">
+            <h1 class="lone">{{news.title}}</h1>
+            <p class="header-subtitle">{{news.created_by.first_name}} {{news.created_by.last_name}}, {{news.created_at | amDateFormat:'DD.MM.YYYY - H:mm:ss '}}</p>
+            <a class="btn purple join" ng-if="user.is_superuser" ui-sref="admin.news.edit({id: news.id})"><i class="fa fa-pencil"></i> Edytuj<span class="corner left"></span></a>
+        </div>
+
+        <div class="container regular-content">
+            <div class="left-panel pull-left">
+                <a class="btn purple full m-bottom-20" ui-sref="news.list"><i class="fa fa-chevron-left"></i>Powrót</a>
+            </div>
+
+
+            <div class="project-list news pull-right container">
+                <div class="important-content small col-md-4 col-xs-12 pull-right">
+                    <div class="col-xs-12">
+                        <p class="news-img">
+                            <img ng-src="{{getMediaUrl(news.news_thumbnail.filename, 'photo')}}" alt="{{news.title}} - zdjęcie">
+                        </p>
+                        <p class="img-title">
+                            {{news.news_thumbnail.description}}
+                        </p>
+                    </div>
+                </div>
+
+                <div class="short-content col-md-8 col-xs-12 container pull-left">
+                    <p ng-bind-html="news.body"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div recommended-offers offers="promotedOffers" limit="4"></div>

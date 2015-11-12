@@ -1,0 +1,129 @@
+<!--
+
+Portal Ochotnicy - http://ochotnicy.pl
+
+Copyright (C) Pracownia badań i innowacji społecznych Stocznia
+
+Development: TEONITE - http://teonite.com
+
+-->
+<div class="main-content-section">
+    <div class="container">
+        <div class="title-bar negative-top">
+            <div class="tags-social">
+            </div>
+            <h1>Edycja szablonu {{displayName}}</h1>
+            <ul class="nav nav-pills join">
+                <li role="presentation" class="dropdown" dropdown>
+                    <a class="dropdown-toggle btn purple" dropdown-toggle role="button" aria-expanded="false">
+                        <i class="fa fa-cog left"></i>Opcje<span class="corner left"></span>
+                    </a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li>
+                            <a class="btn purple" ng-click="submit()" role="button" aria-expanded="false"><i class="fa fa-pencil left"></i> Zapisz zmiany</a>
+                        </li>
+                        <!--<li>-->
+                            <!--<a class="btn purple" href="#" role="button" aria-expanded="false"><i class="fa fa-eye left"></i> Zobacz podgląd</a>-->
+                        <!--</li>-->
+                        <li>
+                            <a class="btn purple" ng-click="doTheBack()" role="button" aria-expanded="false"><i class="fa fa-times left"></i> Anuluj zmiany</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+
+        <div class="container regular-content row">
+            <div class="container">
+                <div class="col-md-8 col-xs-12 container left-col">
+                    <div class="registration-finish row">
+                        <alert type="success" ng-show="success">Szablon został zapisany</alert>
+                        <alert type="danger" ng-show="error">Nie udało się zapisać szablonu</alert>
+                        <h2 class="line">
+                            Szablon
+                            <!--<a href="#" class="to-right pull-right">Historia rewizji (3)</a>-->
+                        </h2>
+                        <p class="m-bottom-30">
+                            <p ng-show="isOffer">Możesz zmienić treść domyślnego szablonu {{displayName}} by dostosować go na potrzeby oferty</p>
+                            <p ng-show="!isOffer">Szablon porozumienia Twojej organizacji pojawiać się będzie domyślnie przy ofertach i będzie mógł być każdorazowo
+                            przystosowany do realiów danej oferty.</p>
+                            <p>Oprócz edycji tekstowych skorzystaj ze słownika pojęć, który automatycznie wypełni umowę takimi danymi, jak np. imię wolontariusza wstawiając {{escapeKeyword('imie_wolontariusza')}}.
+                                Dzięki opcjom dostępnym po prawej stronie możesz dodawać, zmieniać lub usuwać pojęcia.</p>
+                        </p>
+                        <div class="text-editor-wrapper">
+                            <div class="text-editor">
+                                <form ng-submit="submit()" novalidate name="form" >
+                                    <textarea class="textarea" ui-tinymce="tinymceOptions" ng-model="template.body" ng-required></textarea>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4 col-xs-12 container right-col">
+                    <h2 class="line m-bottom-0">
+                        Pojęcia kluczowe
+                    </h2>
+
+                    <div class="important-content yellow m-bottom-20">
+                        Skorzystaj z poniższych pojęć kluczowych jeżeli chcesz, aby Twój dokument automatycznie generował najważniejsze informacje.
+                        Użyj ikony <i class="fa fa-copy"></i>aby wstawić wybrane.
+                        <div class="corner-arrow"></div>
+                    </div>
+                    <!--<a href="#" class="btn orange full m-bottom-30"><i class="fa fa-eye"></i>Zobacz przykład</a>-->
+
+                    <h2 class="line m-bottom-0">
+                        Lista pojęć
+                    </h2>
+
+                    <form>
+                        <select name="lista-pojec" class="border-input basic m-bottom-20" id="sortowanie" ng-model="keywordSelect">
+                            <option value="all">Pokaż wszystkie</option>
+                            <option value="agreement">Dotyczące porozumienia/certyfikatu</option>
+                            <option value="offer">Dotyczące oferty</option>
+                            <option value="organization">Dotyczące organizacji</option>
+                            <option value="volunteer">Dotyczące wolontariusza</option>
+                        </select>
+                    </form>
+                    <p class="key-word" ng-if="keywordSelect == 'all' || keywordSelect == 'agreement'" ng-repeat="(tag, name) in keywords.agreement">
+                        <span class="copy-icon" ng-click="addKeyword(tag)"><i class="fa fa-copy"></i></span>{{name}}:
+                        <span>{{escapeKeyword(tag)}}</span>
+                    </p>
+                    <p class="key-word" ng-if="keywordSelect == 'all' || keywordSelect == 'offer'" ng-repeat="(tag, name) in keywords.offer">
+                        <span class="copy-icon" ng-click="addKeyword(tag)"><i class="fa fa-copy"></i></span>{{name}}:
+                        <span>{{escapeKeyword(tag)}}</span>
+                    </p>
+                    <p class="key-word" ng-if="keywordSelect == 'all' || keywordSelect == 'organization'" ng-repeat="(tag, name) in keywords.organization">
+                        <span class="copy-icon" ng-click="addKeyword(tag)"><i class="fa fa-copy"></i></span>{{name}}:
+                        <span>{{escapeKeyword(tag)}}</span>
+                    </p>
+                    <p class="key-word" ng-if="keywordSelect == 'all' || keywordSelect == 'volunteer'" ng-repeat="(tag, name) in keywords.volunteer">
+                        <span class="copy-icon" ng-click="addKeyword(tag)"><i class="fa fa-copy"></i></span>{{name}}:
+                        <span>{{escapeKeyword(tag)}}</span>
+                    </p>
+
+
+                </div>
+
+                <div class="sub-bar menu col-xs-12">
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-5">
+                            <button class="btn options white" ng-click="doTheBack()">
+                                Anuluj wprowadzone zmiany<i class="fa fa-close right"></i>
+                            </button>
+                        </div>
+                        <div class="col-xs-12 col-sm-7 right">
+                            <!--<button class="btn options white responsive-big">-->
+                                <!--<i class="fa fa-eye left"></i>Zobacz podgląd-->
+                            <!--</button>-->
+                            <button class="btn options purple responsive-big" ng-click="submit()">
+                                Zapisz zmiany<i class="fa fa-check right"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

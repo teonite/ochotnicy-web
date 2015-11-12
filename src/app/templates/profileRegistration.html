@@ -1,0 +1,390 @@
+<!--
+
+Portal Ochotnicy - http://ochotnicy.pl
+
+Copyright (C) Pracownia badań i innowacji społecznych Stocznia
+
+Development: TEONITE - http://teonite.com
+
+-->
+<div class="main-content-section">
+    <div class="container">
+        <div class="title-bar negative-top">
+            <div class="tags-social">
+            </div>
+            <h1>Rejestracja - krok 2</h1>
+        </div>
+
+        <div class="container regular-content">
+            <div class="full-width container">
+                <form ng-submit="submit()" novalidate name="form">
+                    <div class="registration-finish row">
+                        <h2>Typ konta</h2>
+
+                        <div class="account-type row m-bottom-30">
+                            <div class="col-md-3 col-xs-4">Wybierz rodzaj konta</div>
+                            <div class="col-md-6 col-sm-8 col-xs-12">
+                                <div class="radio-label-box col-xs-6">
+                                    <label class="radio-label col-xs-12" ng-class="{'active': volunteer}">
+                                        <input type="radio" name="rodzaj-konta" value="konto-wolontariusz" class="pull-left" ng-model="volunteer" ng-value="true"/>
+                                        <i class="fa" ng-class="{'fa-check': volunteer}"></i>Wolontariusz
+                                    </label>
+                                </div>
+                                <div class="radio-label-box col-xs-6">
+                                    <label class="radio-label col-xs-12" ng-class="{'active': volunteer == false}">
+                                        <input type="radio" name="rodzaj-konta" value="konto-organizacja" class="pull-left" ng-model="volunteer" ng-value="false"/>
+                                        <i class="fa" ng-class="{'fa-check': volunteer == false}"></i>Organizacja
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div ng-if="volunteer">
+                            <h2>Dane podstawowe<span> (<i class="fa fa-asterisk default"></i> - pola wymagane)</span>
+                            </h2>
+                            <table class="col-md-9 col-xs-12">
+                                <tr>
+                                    <td class="col-xs-4"><label for="first-name">Imię</label></td>
+                                    <td class="col-xs-7">
+                                        <input type="text" placeholder="Podaj swoje imię" id="first-name" name="volFirstName" ng-minlength="2" ng-maxlength="30"
+                                               class="border-input" ng-model="user.first_name" ng-required="volunteer" maxlength="20">
+                                        <div ng-messages="form.volFirstName.$error" ng-messages-include="errorMessages.html" ng-if="form.submitted || form.volFirstName.$dirty"></div>
+                                    </td>
+                                    <td class="col-xs-1">
+                                        <display-validate element="form.volFirstName" model="user.first_name" required="volunteer" edit="false"></display-validate>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-xs-4"><label for="family-name">Nazwisko</label></td>
+                                    <td class="col-xs-7">
+                                        <input type="text" placeholder="Podaj swoje nazwisko" id="family-name" name="volLastName" ng-minlength="3" ng-maxlength="30"
+                                               class="border-input" ng-model="user.last_name" ng-required="volunteer" maxlength="30">
+                                        <div ng-messages="form.volLastName.$error" ng-messages-include="errorMessages.html" ng-if="form.submitted || form.volLastName.$dirty"></div>
+                                    </td>
+                                    <td class="col-xs-1">
+                                        <display-validate element="form.volLastName" model="user.last_name" required="volunteer" edit="false"></display-validate>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-xs-4"><label for="birthday">Data urodzenia <span class="small">(dzień/miesiąc/rok)</span></label>
+                                    </td>
+                                    <td class="col-xs-6 col-sm-3">
+                                        <input type="text" placeholder="DD/MM/YYYY" class="border-input" name="volBirthday"
+                                               datepicker-popup="dd/MM/yyyy" is-open="opened" max-date="{{maxDate}}"
+                                               datepicker-options="dateOptions" show-button-bar="false"
+                                               datepicker-append-to-body="true" ng-required="volunteer"
+                                               ng-model="profile.birthday" date-lower="{{maxDate | date: 'yyyy-MM-dd'}}"
+                                               id="birthday" ng-click="openCalendar($event)"/>
+                                        <div ng-messages="form.volBirthday.$error" ng-messages-include="errorMessages.html" ng-if="form.submitted || form.volBirthday.$dirty"></div>
+                                    </td>
+                                    <td class="col-xs-2">
+                                        <display-validate element="form.volBirthday" model="profile.birthday" required="volunteer" edit="false"></display-validate>
+                                    </td>
+                                </tr>
+                                <tr class="small">
+                                    <td class="col-xs-4"></td>
+                                    <td class="col-xs-6">
+                                        * Rejestracja dostępna dla osób w wieku 13 lat lub więcej
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-xs-4">Płeć</td>
+                                    <td class="col-xs-7 radio-buttons">
+                                        <div class="radio-label-box col-xs-6">
+                                            <label class="radio-circle col-xs-12" ng-class="{'active': profile.gender == 1}">
+                                                <span class="radio-circle pull-left">
+                                                    <span class="dot"></span><input type="radio" name="gender" value="1" class="pull-left" ng-model="profile.gender"/>
+                                                </span>
+                                                Mężczyzna
+                                            </label>
+                                        </div>
+                                        <div class="radio-label-box col-xs-6">
+                                            <label class="radio-circle col-xs-12" ng-class="{'active': profile.gender == 2}">
+                                                <span class="radio-circle pull-left">
+                                                    <span class="dot"></span><input type="radio" name="gender" value="2" class="pull-left" ng-model="profile.gender"/>
+                                                </span>
+                                                Kobieta
+                                            </label>
+                                        </div>
+                                    </td>
+                                    <td class="col-xs-1"></td>
+                                </tr>
+                                <tr>
+                                    <td class="col-xs-4"><label for="about-me">O mnie</label><br />
+                                        Opisz krótko czym się zajmujesz na co dzień, jakie są Twoje zainteresowania, co potrafisz i lubisz robić. Możesz również  podzielić się informacją o swoich umiejętnościach, wiedzy, doświadczeniu.
+                                    </td>
+                                    <td class="col-xs-7">
+                                        <textarea placeholder="Napisz o sobie" id="about-me" name="volAbout" ng-minlength="30" ng-maxlength="350"
+                                                  class="textarea" ng-model="profile.about" ng-required="volunteer" ui-tinymce="tinymceOptions"></textarea>
+                                        <div ng-messages="form.volAbout.$error" ng-messages-include="errorMessages.html" ng-if="form.submitted || form.volAbout.$dirty"></div>
+                                    </td>
+                                    <td class="col-xs-1">
+                                        <display-validate element="form.volAbout" model="profile.about" required="volunteer" edit="false"></display-validate>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-xs-4"><label for="skills-description">Twoje oczekiwania</label><br />
+                                        Opisz  jakie są Twoje oczekiwania względem wolontariatu. Czego chciał(a)byś się nauczyć, dowiedzieć, doświadczyć. 
+                                    </td>
+                                    <td class="col-xs-7">
+                                        <textarea placeholder="Napisz o sobie" id="skills-description" name="volSkillsDescr" ng-minlength="30" ng-maxlength="350"
+                                                  class="textarea" ng-model="profile.abilities_description" ng-required="volunteer" ui-tinymce="tinymceOptions"></textarea>
+                                        <div ng-messages="form.volSkillsDescr.$error" ng-messages-include="errorMessages.html" ng-if="form.submitted || form.volSkillsDescr.$dirty"></div>
+                                    </td>
+                                    <td class="col-xs-1">
+                                        <display-validate element="form.volSkillsDescr" model="profile.abilities_description" required="volunteer" edit="false"></display-validate>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-xs-4"><label for="skills">Twoje kompetencje</label></td>
+                                    <td class="col-xs-7">
+                                        <select id="skills" multiple chosen="{inherit_select_classes:true}" name="volSkills"
+                                                ng-model="profile.abilities" width="'100%'"
+                                                ng-options="item.id as item.name for item in abilities"
+                                                data-placeholder="Wybierz swoje umiejętności"
+                                                class="border-input" ng-required="volunteer"></select>
+                                        <div ng-messages="form.volSkills.$error" ng-messages-include="errorMessages.html" ng-if="form.submitted || form.volSkills.$dirty"></div>
+                                    </td>
+                                    <td class="col-xs-1">
+                                        <display-validate element="form.volSkills" model="profile.abilities" required="volunteer" edit="false"></display-validate>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-xs-4"><label for="job-status">Co robię na co dzień?</label></td>
+                                    <td class="col-xs-7">
+                                        <select class="border-input" id="job-status" name="volEducation"
+                                                ng-model="profile.education"
+                                                ng-options="item.id as item.name for item in education" ng-required="volunteer">
+                                        </select>
+                                        <div ng-messages="form.volEducation.$error" ng-messages-include="errorMessages.html" ng-if="form.submitted || form.volEducation.$dirty"></div>
+                                    </td>
+                                    <td class="col-xs-1">
+                                        <display-validate element="form.volEducation" model="profile.education" required="volunteer" edit="false"></display-validate>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-xs-4"><label for="phone-number">Numer telefonu</label></td>
+                                    <td class="col-xs-7 col-sm-3">
+                                        <input type="text" placeholder="Np. 630-520-410" id="phone-number" name="volPhone"
+                                               class="border-input" ng-model="profile.phonenumber" minlength="7" ng-maxlength="12">
+                                        <div ng-messages="form.volPhone.$error" ng-messages-include="errorMessages.html" ng-if="form.submitted || form.volPhone.$dirty"></div>
+                                    </td>
+                                    <td class="col-xs-1">
+                                        <display-validate element="form.volPhone" model="profile.phonenumber" required="false" edit="false"></display-validate>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div ng-show="volunteer == false">
+                            <h2>Dane podstawowe<span> (<i class="fa fa-asterisk default"></i> - pola wymagane)</span>
+                            </h2>
+
+                            <div class="row">
+                                <table class="col-md-9 col-xs-12">
+                                    <tr>
+                                        <td class="col-xs-4"><label for="orga-name">Pełna nazwa organizacji</label></td>
+                                        <td class="col-xs-7">
+                                            <input type="text" placeholder="Podaj pełną nazwę organizacji" name="orgFullname" ng-minlength="2" ng-maxlength="255"
+                                                   id="orga-name" ng-model="organization.fullname"
+                                                   class="border-input" ng-required="!volunteer">
+                                            <div ng-messages="form.orgFullname.$error" ng-messages-include="errorMessages.html" ng-if="form.submitted || form.orgFullname.$dirty"></div>
+                                        </td>
+                                        <td class="col-xs-1">
+                                            <display-validate element="form.orgFullname" model="organization.fullname" required="!volunteer" edit="false"></display-validate>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-xs-4"><label for="short-orga-name">Skrócona nazwa organizacji</label>
+                                        </td>
+                                        <td class="col-xs-7">
+                                            <input type="text" placeholder="Podaj skróconą nazwę organizacji" ng-model="organization.shortname" ng-minlength="3" ng-maxlength="255"
+                                                   id="short-orga-name" class="border-input" ng-required="!volunteer" name="orgShortname">
+                                            <div ng-messages="form.orgShortname.$error" ng-messages-include="errorMessages.html" ng-if="form.submitted || form.orgShortname.$dirty"></div>
+                                        </td>
+                                        <td class="col-xs-1">
+                                            <display-validate element="form.orgShortname" model="organization.shortname" required="!volunteer" edit="false"></display-validate>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-xs-4"><label for="orga-street">Ulica</label>
+                                        </td>
+                                        <td class="col-xs-7">
+                                            <input type="text" ng-model="organization.street" placeholder="Podaj ulicę" ng-minlength="3" ng-maxlength="50"
+                                                   id="orga-street" class="border-input" ng-required="!volunteer" name="orgStreet">
+                                            <div ng-messages="form.orgStreet.$error" ng-messages-include="errorMessages.html" ng-if="form.submitted || form.orgStreet.$dirty"></div>
+                                        </td>
+                                        <td class="col-xs-1">
+                                            <display-validate element="form.orgStreet" model="organization.street" required="!volunteer" edit="false"></display-validate>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-xs-4"><label for="orga-house">Numer domu</label>
+                                        </td>
+                                        <td class="col-xs-7">
+                                            <input type="text" ng-model="organization.house_number" placeholder="Numer domu" ng-minlength="1" ng-maxlength="10"
+                                                   id="orga-house" class="border-input" ng-required="!volunteer" name="orgHouse">
+                                            <div ng-messages="form.orgHouse.$error" ng-messages-include="errorMessages.html" ng-if="form.submitted || form.orgHouse.$dirty"></div>
+                                        </td>
+                                        <td class="col-xs-1">
+                                            <display-validate element="form.orgHouse" model="organization.house_number" required="!volunteer" edit="false"></display-validate>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-xs-4"><label for="orga-apartment">Numer mieszkania</label>
+                                        </td>
+                                        <td class="col-xs-7">
+                                            <input type="text" ng-model="organization.apartment_number" placeholder="Numer mieszkania" ng-minlength="1" ng-maxlength="10"
+                                                   id="orga-apartment" class="border-input" name="orgApartment">
+                                            <div ng-messages="form.orgApartment.$error" ng-messages-include="errorMessages.html" ng-if="form.submitted || form.orgApartment.$dirty"></div>
+                                        </td>
+                                        <td class="col-xs-1">
+                                            <display-validate element="form.orgApartment" model="organization.apartment_number" required="false" edit="false"></display-validate>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-xs-4"><label for="org-zip">Kod pocztowy</label>
+                                        </td>
+                                        <td class="col-xs-7">
+                                            <input type="text" ng-model="organization.zipcode" placeholder="Kod pocztowy" ng-minlength="5" ng-maxlength="20"
+                                                   id="org-zip" class="border-input" ng-required="!volunteer" name="orgZip">
+                                            <div ng-messages="form.orgZip.$error" ng-messages-include="errorMessages.html" ng-if="form.submitted || form.orgZip.$dirty"></div>
+                                        </td>
+                                        <td class="col-xs-1">
+                                            <display-validate element="form.orgZip" model="organization.zipcode" required="!volunteer" edit="false"></display-validate>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-xs-4"><label for="org-city">Miasto</label></td>
+                                        <td class="col-xs-7">
+                                            <input type="text" ng-model="organization.city" placeholder="Miasto" ng-minlength="3" ng-maxlength="50"
+                                                   id="org-city" class="border-input" ng-required="!volunteer" name="orgCity">
+                                            <div ng-messages="form.orgCity.$error" ng-messages-include="errorMessages.html" ng-if="form.submitted || form.orgCity.$dirty"></div>
+                                        </td>
+                                        <td class="col-xs-1">
+                                            <display-validate element="form.orgCity" model="organization.city" required="!volunteer" edit="false"></display-validate>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-xs-4"><label for="org-country">Państwo</label></td>
+                                        <td class="col-xs-7">
+                                            <select id="org-country" chosen="{inherit_select_classes:true}" name="orgCountry"
+                                                ng-model="organization.country"
+                                                ng-options="item.code as item.name for item in countries"
+                                                data-width="'100%'"
+                                                class="border-input" ng-required="!volunteer"></select>
+                                            <div ng-messages="form.orgCountry.$error" ng-messages-include="errorMessages.html" ng-if="form.submitted || form.orgCountry.$dirty"></div>
+                                        </td>
+                                        <td class="col-xs-1">
+                                            <display-validate element="form.orgCountry" model="organization.country" required="!volunteer" edit="false"></display-validate>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-xs-4"><label for="orga-status">Typ organizacji</label></td>
+                                        <td class="col-xs-7">
+                                            <select name="orgStatus" class="border-input" id="orga-status" ng-model="organizationType" ng-options="organization as organization.name for organization in organizationTypes"
+                                                    ng-required="!volunteer"></select>
+                                            <div ng-messages="form.orgStatus.$error" ng-messages-include="errorMessages.html" ng-if="form.submitted || form.orgStatus.$dirty"></div>
+                                        </td>
+                                        <td class="col-xs-1">
+                                            <display-validate element="form.orgStatus" model="organizationType" required="!volunteer" edit="false"></display-validate>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-xs-4"><label for="krs-number">Numer KRS</label></td>
+                                        <td class="col-xs-7 col-sm-3">
+                                            <input type="text" placeholder="Np.: 0000484745" id="krs-number" name="orgKRS" ng-minlength="5" ng-maxlength="20"
+                                                   class="border-input" ng-required="!volunteer && organizationType.is_krs_required" ng-model="organization.krs" ng-pattern="/^\d+$/">
+                                            <div ng-messages="form.orgKRS.$error" ng-messages-include="errorMessages.html" ng-if="form.submitted || form.orgKRS.$dirty"></div>
+                                        </td>
+                                        <td class="col-xs-1">
+                                            <i class="fa fa-check green" ng-if="(!organizationType.is_krs_required && !form.orgKRS.$pristine || organizationType.is_krs_required) && form.orgKRS.$valid"></i>
+                                            <i class="fa fa-close red" ng-if="!form.orgKRS.$pristine && form.orgKRS.$invalid"></i>
+                                            <i class="fa fa-asterisk default" ng-if="organizationType.is_krs_required && form.orgKRS.$pristine"></i>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-xs-4"><label for="nip">NIP</label></td>
+                                        <td class="col-xs-7 col-sm-3">
+                                            <!--ng-pattern="/^((\d{3}[- ]\d{3}[- ]\d{2}[- ]\d{2})|(\d{3}[- ]\d{2}[- ]\d{2}[- ]\d{3}))$/"-->
+                                            <input type="text" placeholder="Np.: 8589850909" id="nip" name="orgNIP" ng-minlength="10" ng-maxlength="15"
+                                                   class="border-input" ng-required="!volunteer && organizationType.is_nip_required" ng-model="organization.nip" ng-pattern="/^\d+$/">
+                                            <div ng-messages="form.orgNIP.$error" ng-messages-include="errorMessages.html" ng-if="form.submitted || form.orgNIP.$dirty"></div>
+                                        </td>
+                                        <td class="col-xs-1">
+                                            <i class="fa fa-check green" ng-if="(!organizationType.is_nip_required && !form.orgNIP.$pristine || organizationType.is_nip_required) && form.orgNIP.$valid"></i>
+                                            <i class="fa fa-close red" ng-if="!form.orgNIP.$pristine && form.orgNIP.$invalid"></i>
+                                            <i class="fa fa-asterisk default" ng-if="organizationType.is_nip_required && form.orgNIP.$pristine"></i>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-xs-4"><label for="about-orga">Krótki opis organizacji</label>
+                                        </td>
+                                        <td class="col-xs-7">
+                                            <textarea placeholder="Misja, cel prowadzonej działalności..." id="about-orga" name="orgAbout" ng-minlength="30" ng-maxlength="350"
+                                                  class="textarea" ng-required="!volunteer" ng-model="organization.description" ui-tinymce="tinymceOptions"></textarea>
+                                            <div ng-messages="form.orgAbout.$error" ng-messages-include="errorMessages.html" ng-if="form.submitted || form.orgAbout.$dirty"></div>
+                                        </td>
+                                        <td class="col-xs-1">
+                                            <display-validate element="form.orgAbout" model="organization.description" required="!volunteer" edit="false"></display-validate>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+
+                            <h2>Twoje dane<span> (<i class="fa fa-asterisk default"></i> - pola wymagane)</span></h2>
+
+                            <div class="row">
+                                <table class="col-md-9 col-xs-12">
+                                    <tr>
+                                        <td class="col-xs-4"><label for="orga-name-first-name">Imię</label></td>
+                                        <td class="col-xs-7">
+                                            <input type="text" placeholder="Podaj swoje imię" id="orga-name-first-name" name="orgFirstName" ng-minlength="2" ng-maxlength="30"
+                                                   class="border-input" ng-required="!volunteer" ng-model="user.first_name">
+                                            <div ng-messages="form.orgFirstName.$error" ng-messages-include="errorMessages.html" ng-if="form.submitted || form.orgFirstName.$dirty"></div>
+                                        </td>
+                                        <td class="col-xs-1">
+                                            <display-validate element="form.orgFirstName" model="user.first_name" required="!volunteer" edit="false"></display-validate>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-xs-4"><label for="orga-name-family-name">Nazwisko</label></td>
+                                        <td class="col-xs-7">
+                                            <input type="text" placeholder="Podaj swoje nazwisko" name="orgLastName" ng-minlength="3" ng-maxlength="30"
+                                                   id="orga-name-family-name" ng-model="user.last_name"
+                                                   class="border-input" ng-required="!volunteer">
+                                            <div ng-messages="form.orgLastName.$error" ng-messages-include="errorMessages.html" ng-if="form.submitted || form.orgLastName.$dirty"></div>
+                                        </td>
+                                        <td class="col-xs-1">
+                                            <display-validate element="form.orgLastName" model="user.last_name" required="!volunteer" edit="false"></display-validate>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-xs-4"><label for="orga-phone-number">Numer telefonu</label></td>
+                                        <td class="col-xs-7 col-sm-3">
+                                            <input type="text" placeholder="Np. 630-520-410" id="orga-phone-number" name="orgPhone"
+                                                   class="border-input" ng-model="organization.phonenumber" ng-minlength="7" ng-maxlength="15">
+                                            <div ng-messages="form.orgPhone.$error" ng-messages-include="errorMessages.html" ng-if="form.submitted || form.orgPhone.$dirty"></div>
+                                        </td>
+                                        <td class="col-xs-1">
+                                            <display-validate element="form.orgPhone" model="organization.phonenumber" required="false" edit="false"></display-validate>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="sub-bar" ng-show="volunteer != null ">
+                        <p ng-show="error || userError">Wystąpiły błędy podczas rejestracji.</p>
+                        <span ng-show="success">Rejestracja udana! <br/>
+                            <a ui-sref="profileRegisterPhoto"><button class="btn big orange"><i class="fa fa-check"></i>Przejdź do ostatniego kroku</button></a>
+                        </span>
+                        <button class="btn big orange" type="submit" ng-show="!success && !showLoader"><i class="fa fa-check"></i>Zapisz</button>
+                        <button class="btn big orange" type="submit" ng-show="showLoader" ng-disabled="true">
+                            <div loader loader-style="'height: 25px; width: 40px;'"></div>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!--<div recommended-offers offers="promotedOffers" limit="4"></div>-->

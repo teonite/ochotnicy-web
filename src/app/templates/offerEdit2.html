@@ -1,0 +1,97 @@
+<!--
+
+Portal Ochotnicy - http://ochotnicy.pl
+
+Copyright (C) Pracownia badań i innowacji społecznych Stocznia
+
+Development: TEONITE - http://teonite.com
+
+-->
+<div class="main-content-section">
+    <div class="container">
+        <div class="title-bar negative-top" wizard-header url="offerWizardHeader.html" step="2"></div>
+
+        <div class="container regular-content">
+            <div class="full-width container">
+                <form ng-submit="save()" novalidate name="form">
+                    <div class="registration-finish steps row">
+                        <table class="col-md-11 col-xs-12 row">
+                            <tr>
+                                <td class="col-xs-12 col-md-6">
+                                    <p class=""><label for="offer-who">Kogo szukamy - określ profil wolontariusza</label> <display-validate element="form.description_requirements" model="offer.description_requirements" required="true" edit="true"></display-validate></p>
+
+                                    <div class="">
+                                        <textarea placeholder="Przykład: Poszukujemy osoby, które: są otwarte na ludzi, wykazują się odpowiedzialnością,
+                                                               lubią pracę z dziećmi i młodzieżą, posiadają wiedzę pozwalającą na poprowadzenie wybranego podmiotu."
+                                                id="offer-who" class="textarea" ui-tinymce="tinymceOptions" name="description_requirements" ng-required="true" ng-minlength="15" ng-maxlength="600"
+                                                ng-model="offer.description_requirements"></textarea>
+                                        <div ng-messages="form.description_requirements.$error" ng-messages-include="errorMessages.html" ng-if="form.submitted || form.description_requirements.$dirty"></div>
+                                    </div>
+                                </td>
+                                <td class="col-xs-12 col-md-5">
+                                    <div class="comment">
+                                        Określ profil wolontariusza, którego potrzebujesz do realizacji zadań. Warto w tym miejscu określić wiek – jeśli to jest ważne pod kątem zadań oraz cechy, umiejętności, wiedzę którą powinien posiadać wolontariusz by móc przystąpić do oferty. (Możesz użyć max. 600 znaków)
+                                        <span class="corner white-right"></span>
+                                        <span class="arrow"></span>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-xs-12 col-md-6">
+                                    <p class=""><label for="offer-additional">Dodatkowe wymagania</label> <display-validate element="form.description_additional_requirements" model="offer.description_additional_requirements" required="false" edit="true"></display-validate></p>
+
+                                    <div class="">
+                                        <textarea placeholder="Przykład: Kurs pierwszej pomocy będzie dodatkowym atutem"
+                                                  id="offer-additional" class="textarea" ui-tinymce="tinymceOptions" ng-minlength="20" ng-maxlength="600"
+                                                  ng-model="offer.description_additional_requirements" name="description_additional_requirements" ng-required="true"></textarea>
+                                        <div ng-messages="form.description_additional_requirements.$error" ng-messages-include="errorMessages.html" ng-if="form.submitted || form.description_additional_requirements.$dirty"></div>
+                                    </div>
+                                </td>
+                                <td class="col-xs-12 col-md-5">
+                                    <div class="comment">
+                                        Jeśli do wykonanie powyższego zadania wolontariusz potrzebuje specjalnych kwalifikacji, kursów lub kompetencji możesz osobno je opisać w tej rubryce. (Możesz użyć max. 600 znaków)
+                                        <span class="corner white-right"></span>
+                                        <span class="arrow"></span>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-xs-12 col-md-6">
+                                    <p class=""><label for="offer-ensure">Oferujemy</label> <display-validate element="form.description_benefits" model="offer.description_benefits" required="true" edit="true"></display-validate></p>
+
+                                    <div class="">
+                                        <textarea
+                                                placeholder="Przykład: Oferujemy: szkolenia, konsultacje ze specjalistami, atrakcyjne spotkania dla wolontariuszy i podopiecznych, umowę wolontariacką i stałą opiekę Fundacji."
+                                                id="offer-ensure" class="textarea" ui-tinymce="tinymceOptions" name="description_benefits"
+                                                ng-model="offer.description_benefits" ng-required="true" ng-minlength="20" ng-maxlength="800"></textarea>
+                                        <div ng-messages="form.description_benefits.$error" ng-messages-include="errorMessages.html" ng-if="form.submitted || form.description_benefits.$dirty"></div>
+                                    </div>
+                                </td>
+                                <td class="col-xs-12 col-md-5">
+                                    <div class="comment">
+                                        Opisz co oferuje twoja organizacja wolontariuszom, których zapraszasz do współpracy. Warto nie tylko wypisać to co jest obowiązkiem organizacji (porozumienie, NNW, zaświadczenie) ale pomyśleć nad inną formą  podziękowań czy rozwoju wolontariuszy w twojej organizacji (np. szkolenia, program mentorski, integracja). (Możesz użyć max. 800 znaków)
+                                        <span class="corner white-right"></span>
+                                        <span class="arrow"></span>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="sub-bar menu">
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-5">
+                                <button class="btn options white" ui-sref="offer.list">Anuluj tworzenie projektu <i class="fa fa-close right"></i></button>
+                            </div>
+                            <div class="col-xs-12 col-sm-7 right">
+                                <button class="btn options white responsive-big" type="button" ng-click="goToStep(1)"><i class="fa fa-chevron-left left"></i>Poprzedni krok</button>
+                                <button class="btn options orange responsive-big" type="submit">Kolejny krok <i class="fa fa-chevron-right right"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div recommended-offers offers="promotedOffers" limit="4"></div>

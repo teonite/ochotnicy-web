@@ -1,0 +1,29 @@
+<div class="search-comment" ng-show="!offers.length">Nie znaleziono żadnych ogłoszeń</div>
+<div class="media post row" dir-paginate="offer in offers | itemsPerPage: limit">
+    <a class="media-left" ui-sref="offer.details({ id: offer.id })">
+        <img ng-src="{{ getMediaUrl(offer.small_thumbnail_relation.filename, 'photo') }}" alt="{{ offer.title }}">
+    </a>
+
+    <div class="media-body">
+        <h3><a ui-sref="offer.details({ id: offer.id })">{{ offer.title }}</a></h3>
+        <p><a href="" ui-sref="organization.offers({id: offer.publishing_organization.id})">{{ offer.publishing_organization.fullname }}</a></p>
+        <ul class="tags">
+            <li class="hidden-text">Tagi:</li>
+            <li ng-repeat="category in offer.category"><a href="" ng-click="toogleFilter(category.id)">{{ category.name }}</a></li>
+        </ul>
+    </div>
+    <div class="media-right">
+        <div class="media-right circle-info circle-hide" ng-if="options.showCharts">
+            <canvas doughnutchart data="offer.timeChartData" options="chartOptions" alt="Wykres" width="90" height="90"></canvas>
+            <a ui-sref="offer.details({ id: offer.id })"><h3>Pozostało</h3> <span am-time-ago="offer.publish_to" am-without-suffix="true"></span></a>
+        </div>
+        <div class="media-right circle-info circle-hide" ng-if="options.showCharts">
+            <canvas doughnutchart data="offer.volunteersChartData" options="chartOptions" alt="Wykres" width="90" height="90"></canvas>
+            <a ui-sref="offer.details({ id: offer.id })"><h3>Wolontariuszy</h3> <span>{{ offer.volunteers_joined_count }} / {{ offer.volunteer_max_count }}</span></a>
+        </div>
+        <div class="media-right circle-button">
+            <a ui-sref="offer.details({ id: offer.id })">Szczegóły <span class="hidden-text">na temat: {{ offer.title }}</span></a>
+        </div>
+    </div>
+</div>
+<dir-pagination-controls></dir-pagination-controls>

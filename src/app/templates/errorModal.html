@@ -1,0 +1,30 @@
+<!--
+
+Portal Ochotnicy - http://ochotnicy.pl
+
+Copyright (C) Pracownia badań i innowacji społecznych Stocznia
+
+Development: TEONITE - http://teonite.com
+
+-->
+<!-- rejestracja -->
+<div class="modal-header separator">
+    <button type="button" class="close" ng-click="cancel()"><span aria-hidden="true">&times;</span><span
+            class="sr-only">Zamknij okno</span></button>
+    <h2 class="modal-title" id="modal-reg-title">Przepraszamy ale wystąpił błąd.</h2>
+</div>
+<div class="modal-body">
+    <div class="row">
+        <span ng-show="error.status == 0">Przepraszamy ale nie można połączyć z serwerem.</span>
+        <span ng-show="error.status > 0 && !isHtml">Przepraszamy ale wystąpił błąd serwera {{ error.status }} - {{ error.msg }}.</span>
+        <span ng-show="error.status > 0 && isHtml">Przepraszamy ale wystąpił błąd serwera {{ error.status }}:
+            <iframe srcdoc="{{ error.msg }}" style="width: 100%; background-color: #fff;"></iframe>.
+        </span>
+        <br>
+
+        Prosimy o zgłoszenie błędu na adres: ochotnicy@teonite.com
+    </div>
+    <div class="reg-button">
+        <button class="btn big orange" ng-click="cancel()">OK</button>
+    </div>
+</div>

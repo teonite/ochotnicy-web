@@ -1,0 +1,38 @@
+<div class="search-comment" ng-show="!offers.length">Nie znaleziono żadnych ogłoszeń</div>
+<div class="media post row" dir-paginate="application in offers | itemsPerPage: limit">
+    <a class="media-left" ui-sref="offer.details({ id: application.offer.id })">
+        <img ng-src="{{ getMediaUrl(application.offer.small_thumbnail_relation.filename, 'photo') }}" alt="{{ application.offer.title }}">
+    </a>
+    <div class="media-body">
+        <div class="row m-bottom-10">
+            <h3><a ui-sref="application.offer.details({ id: application.offer.id })">{{ application.offer.title }}</a></h3>
+            <p><a ui-sref="organization.offers({id: application.offer.publishing_organization.id})">{{ application.offer.publishing_organization.fullname }}</a></p>
+        </div>
+        <div class="row details">
+            <div class="col-md-4 col-sm-12">
+                <p class="data">
+                    Data publikacji:
+                    <span><span>{{ application.offer.publish_from | amDateFormat:'DD.MM.YYYY'}}</span></span>
+                </p>
+            </div>
+            <div class="col-md-4 col-sm-12">
+                <p class="data">
+                    Data przystąpienia:
+                    <span><span>{{ application.created_at | amDateFormat:'DD.MM.YYYY'}}</span></span>
+                </p>
+            </div>
+            <div class="col-md-4 col-sm-12" ng-if="options.showAgreementDate">
+                <p class="data">
+                    Data zakończenia:
+                    <span><span>{{ application.offer.agreement_stands_to | amDateFormat:'DD.MM.YYYY'}}</span></span>
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="media-right circle-button">
+        <div class="media-right circle-button">
+            <a ui-sref="offer.details({ id: application.offer.id })">Szczegóły <span class="hidden-text">na temat: {{ application.offer.title }}</span></a>
+        </div>
+    </div>
+</div>
+<dir-pagination-controls></dir-pagination-controls>

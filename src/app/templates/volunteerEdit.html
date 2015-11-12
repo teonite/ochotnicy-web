@@ -1,0 +1,374 @@
+<!--
+
+Portal Ochotnicy - http://ochotnicy.pl
+
+Copyright (C) Pracownia badań i innowacji społecznych Stocznia
+
+Development: TEONITE - http://teonite.com
+
+-->
+<div class="main-content-section">
+    <div class="container">
+
+        <div id="sticky-anchor"></div>
+        <div id="sticky" class="title-bar negative-top user-menu-stick">
+            <h1>{{user.first_name}} {{user.last_name}}<span class="text-hide"> (edycja profilu wolontariusza)</span></h1>
+            <a ng-click="submit()" class="btn purple join" ng-show="!success && !showLoader"><i class="fa fa-check"></i>zapisz zmiany <span class="corner left"></span></a>
+            <a ng-click="doTheBack()" class="btn purple join" ng-show="success"><i class="fa fa-angle-double-left left"></i>Powrót<span class="corner left"></span></a>
+            <button class="btn purple join" type="button" ng-show="showLoader" ng-disabled="true"><div loader loader-style="'height: 25px; width: 40px;'"></div></button>
+        </div>
+
+        <div class="container regular-content">
+            <div class="full-width container">
+                <div class="registration-finish row">
+                    <form ng-submit="submit()" novalidate name="form">
+                        <h2>
+                            <i class="fa fa-male light"></i>
+                            Dane podstawowe
+                        </h2>
+
+                        <div class="row">
+                            <table class="col-md-9 col-xs-12">
+                                <tr>
+                                    <td class="col-sm-4 col-xs-5">
+                                        <p class=""><label for="user-name">Imię</label></p>
+                                    </td>
+                                    <td class="col-sm-6 col-xs-6">
+                                        <input type="text" placeholder="Podaj swoje imię" id="user-name" name="volFirstName"
+                                               class="border-input" ng-model="user.first_name" ng-required="true" maxlength="30" minlength="2">
+                                        <div ng-messages="form.volFirstName.$error" ng-messages-include="errorMessages.html" ng-if="form.submitted || form.volFirstName.$dirty"></div>
+                                    </td>
+                                    <td class="col-xs-1">
+                                        <display-validate element="form.volFirstName" model="user.first_name" required="true" edit="true"></display-validate>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-sm-4 col-xs-5">
+                                        <p class=""><label for="user-family-name">Nazwisko</label></p>
+                                    </td>
+                                    <td class="col-sm-6 col-xs-6">
+                                        <input type="text" placeholder="Podaj swoje nazwisko" id="user-family-name" name="volLastName"
+                                               class="border-input" ng-model="user.last_name" ng-required="true" maxlength="30" minlength="3">
+                                        <div ng-messages="form.volLastName.$error" ng-messages-include="errorMessages.html" ng-if="form.submitted || form.volLastName.$dirty"></div>
+                                    </td>
+                                    <td class="col-xs-1">
+                                        <display-validate element="form.volLastName" model="user.last_name" required="true" edit="true"></display-validate>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-sm-4 col-xs-5">
+                                        <p class=""><label for="birthday">Data urodzenia</label></p>
+                                    </td>
+                                    <td class="col-sm-3 col-xs-6">
+                                        <input type="text" placeholder="DD/MM/YYYY" class="border-input" name="volBirthday"
+                                               datepicker-popup="dd/MM/yyyy" is-open="opened" max-date="{{maxDate}}"
+                                               datepicker-options="dateOptions" show-button-bar="false"
+                                               datepicker-append-to-body="true" ng-required="true"
+                                               ng-model="profile.birthday" date-lower="{{maxDate | date: 'yyyy-MM-dd'}}"
+                                               id="birthday" ng-click="openCalendar($event)"/>
+                                        <div ng-messages="form.volBirthday.$error" ng-messages-include="errorMessages.html" ng-if="form.submitted || form.volBirthday.$dirty"></div>
+                                    </td>
+                                    <td class="col-xs-2">
+                                        <display-validate element="form.volBirthday" model="profile.birthday" required="true" edit="true"></display-validate>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-sm-4 col-xs-5">
+                                        <p class=""><label for="user-number">Numer telefonu</label></p>
+                                    </td>
+                                    <td class="col-sm-3 col-xs-6">
+                                        <input type="text" placeholder="Numer Twojego telefonu" id="user-number" name="volPhone"
+                                               class="border-input" ng-model="profile.phonenumber" ng-minlength="7" ng-maxlength="12">
+                                        <div ng-messages="form.volPhone.$error" ng-messages-include="errorMessages.html" ng-if="form.submitted || form.volPhone.$dirty">
+                                    </td>
+                                    <td class="col-xs-1">
+                                        <display-validate element="form.volPhone" model="profile.phonenumber" required="false" edit="true"></display-validate>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-sm-4 col-xs-5">
+                                        <p class=""><label for="user-address">Adres e-mail</label></p>
+                                    </td>
+                                    <td class="col-sm-3 col-xs-6">
+                                        <input type="email" placeholder="Twój adres e-mail" id="user-address" class="border-input" ng-model="user.email" ng-disabled="true">
+                                    </td>
+                                    <td class="col-xs-1">
+                                        <!--<i class="fa fa-asterisk default"></i>-->
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        <h2>
+                            <i class="fa fa-info light"></i>
+                            Informacje
+                        </h2>
+
+                        <div class="row">
+                            <table class="col-md-9 col-xs-12">
+                                <tr>
+                                    <td class="col-sm-4 col-xs-5">
+                                        <p class=""><label for="user-about">O mnie</label></p>
+                                    </td>
+                                    <td class="col-sm-6 col-xs-6">
+                                        <textarea placeholder="Napisz o sobie" id="user-about" name="volAbout"
+                                                  class="textarea" ng-model="profile.about" ng-required="true" ui-tinymce="tinymceOptions" ng-minlength="30" ng-maxlength="350"></textarea>
+                                        <div ng-messages="form.volAbout.$error" ng-messages-include="errorMessages.html" ng-if="form.submitted || form.volAbout.$dirty">
+                                    </td>
+                                    <td class="col-xs-1">
+                                        <display-validate element="form.volAbout" model="profile.about" required="true" edit="true"></display-validate>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-sm-4 col-xs-5">
+                                        <p class=""><label for="skills-description">Opis umiejętności</label></p>
+                                    </td>
+                                    <td class="col-sm-6 col-xs-6">
+                                        <textarea placeholder="Napisz o sobie" id="skills-description" name="volSkillsDescr" ng-minlength="30" ng-maxlength="350"
+                                                  class="textarea" ng-model="profile.abilities_description" ng-required="true" ui-tinymce="tinymceOptions"></textarea>
+                                        <div ng-messages="form.volSkillsDescr.$error" ng-messages-include="errorMessages.html" ng-if="form.submitted || form.volSkillsDescr.$dirty">
+                                    </td>
+                                    <td class="col-xs-1">
+                                        <display-validate element="form.volSkillsDescr" model="profile.abilities_description" required="true" edit="true"></display-validate>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-sm-4 col-xs-5">
+                                        <p class=""><label for="user-skills">Umiejętności</label></p>
+                                    </td>
+                                    <td class="col-sm-6 col-xs-6">
+                                        <select id="user-skills" multiple chosen="{inherit_select_classes:true}" name="volSkills"
+                                                ng-model="profile.abilities" width="'100%'"
+                                                ng-options="item.id as item.name for item in abilities"
+                                                data-placeholder="Wybierz swoje umiejętności"
+                                                class="border-input" ng-required="true"></select>
+                                        <div ng-messages="form.volSkills.$error" ng-messages-include="errorMessages.html" ng-if="form.submitted || form.volSkills.$dirty">
+                                    </td>
+                                    <td class="col-xs-1">
+                                        <display-validate element="form.volSkills" model="profile.abilities" required="true" edit="true"></display-validate>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-sm-4 col-xs-5">
+                                        <p class=""><label for="user-status">Co robię na co dzień?</label></p>
+                                    </td>
+                                    <td class="col-sm-6 col-xs-6">
+                                        <select class="border-input" id="user-status" name="volEducation"
+                                                ng-model="profile.education"
+                                                ng-options="item.id as item.name for item in education" ng-required="true">
+                                        <div ng-messages="form.volEducation.$error" ng-messages-include="errorMessages.html" ng-if="form.submitted || form.volEducation.$dirty">
+                                        </select>
+                                    </td>
+                                    <td class="col-xs-1">
+                                        <display-validate element="form.volEducation" model="profile.education" required="true" edit="true"></display-validate>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        <h2>
+                            <i class="fa fa-home light"></i>
+                            Dane szczegółowe
+                        </h2>
+                        <p>Podanie Twoich danych osobowych jest niezbędne do zawarcia „Porozumienia o współpracy wolontarystycznej” oraz do ubezpieczenia od NNW (następstw nieszczęśliwych wypadków)  między organizatorem a wolontariuszem.</p>
+                        <p>UWAGA: Powyższe dane wystarczy wypełnić tylko jeden raz. Udostępnione zostaną tylko organizacji, z którą zdecydujesz się współpracować;</p>
+
+                        <div class="row">
+                            <table class="col-md-9 col-xs-12">
+                                <tr>
+                                    <td class="header-cell col-xs-12 m-bottom-0 m-top-20">
+                                        <h3>Dane identyfikacyjne: (niezbędne do zawarcia porozumienia z organizacją)</h3>
+                                        <p>Podanie swoich danych osobowych jest niezbędne do zawarcia „Porozumienia o współpracy wolontarystycznej” oraz do ubezpieczenia od NNW między organizatorem a wolontariuszem.</p>
+                                    </td>
+                                </tr>
+                                <!--<tr>-->
+                                    <!--<td class="col-sm-4 col-xs-5">-->
+                                        <!--<p class=""><label for="pesel">PESEL</label></p>-->
+                                    <!--</td>-->
+                                    <!--<td class="col-sm-6 col-xs-6">-->
+                                        <!--<input type="text" placeholder="Numer PESEL" id="pesel" name="volPESEL" ng-minlength="11" ng-maxlength="11"-->
+                                               <!--class="border-input" ng-required="true" ng-model="profile.pesel"-->
+                                               <!--ui-validate="{pesel : 'validatePESEL($value)' }">-->
+                                        <!--<div ng-messages="form.volPESEL.$error" ng-messages-include="errorMessages.html" ng-if="form.submitted || form.volPESEL.$dirty">-->
+                                    <!--</td>-->
+                                    <!--<td class="col-xs-1">-->
+                                        <!--<display-validate element="form.volPESEL" model="profile.pesel" required="true" edit="true"></display-validate>-->
+                                    <!--</td>-->
+                                <!--</tr>-->
+                                <tr>
+                                    <td class="col-sm-4 col-xs-5">
+                                        <p class=""><label for="proof_type">Typ dokumentu potwierdzającego tożsamość</label></p>
+                                    </td>
+                                    <td class="col-sm-6 col-xs-6">
+                                        <select id="proof_type" name="volProofType"
+                                                ng-model="profile.proof_type"
+                                                ng-options="type.id as type.name for type in proofTypes"
+                                                data-placeholder="Wybierz typ dokumentu"
+                                                class="border-input" ng-required="true"></select>
+                                        <div ng-messages="form.volProofType.$error" ng-messages-include="errorMessages.html" ng-if="form.submitted || form.volProofType.$dirty">
+                                    </td>
+                                    <td class="col-xs-1">
+                                        <display-validate element="form.volProofType" model="profile.proof_type" required="true" edit="true"></display-validate>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-sm-4 col-xs-5">
+                                        <p class=""><label for="proof_number">Numer dokumentu</label></p>
+                                    </td>
+                                    <td class="col-sm-6 col-xs-6">
+                                        <input type="text" placeholder="np. numer dowodu osobistego" id="proof_number" name="volProof" ng-minlength="9" ng-maxlength="9"
+                                               class="border-input" ng-required="false" ng-model="profile.proof_number">
+                                        <div ng-messages="form.volProof.$error" ng-messages-include="errorMessages.html" ng-if="form.submitted || form.volProof.$dirty">
+                                    </td>
+                                    <td class="col-xs-1">
+                                        <display-validate element="form.volProof" model="profile.proof_number" required="true" edit="true"></display-validate>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="header-cell col-xs-12 m-bottom-0">
+                                        <h3>Adres zamieszkania:</h3>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-sm-4 col-xs-5">
+                                        <p class=""><label for="user-street">Ulica</label></p>
+                                    </td>
+                                    <td class="col-sm-6 col-xs-6">
+                                        <input type="text" placeholder="Ulica, na której mieszkasz" id="user-street"
+                                               class="border-input" ng-required="true" ng-model="profile.street" ng-minlength="3" ng-maxlength="50"
+                                               name="volStreet">
+                                        <div ng-messages="form.volStreet.$error" ng-messages-include="errorMessages.html" ng-if="form.submitted || form.volStreet.$dirty">
+                                    </td>
+                                    <td class="col-xs-1">
+                                        <display-validate element="form.volStreet" model="profile.street" required="true" edit="true"></display-validate>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-sm-4 col-xs-5">
+                                        <p class=""><label for="user-house">Numer domu</label></p>
+                                    </td>
+                                    <td class="col-sm-6 col-xs-6">
+                                        <input type="text" placeholder="Numer domu" id="user-house" name="volHouse" ng-minlength="1" ng-maxlength="10"
+                                               class="border-input" ng-required="true" ng-model="profile.house_number">
+                                        <div ng-messages="form.volHouse.$error" ng-messages-include="errorMessages.html" ng-if="form.submitted || form.volHouse.$dirty">
+                                    </td>
+                                    <td class="col-xs-1">
+                                        <display-validate element="form.volHouse" model="profile.house_number" required="true" edit="true"></display-validate>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-sm-4 col-xs-5">
+                                        <p class=""><label for="user-apartment">Numer mieszkania</label></p>
+                                    </td>
+                                    <td class="col-sm-6 col-xs-6">
+                                        <input type="text" placeholder="Numer mieszkania" id="user-apartment" name="volApartment" ng-minlength="1" ng-maxlength="10"
+                                               class="border-input" ng-required="false" ng-model="profile.apartment_number">
+                                        <div ng-messages="form.volApartment.$error" ng-messages-include="errorMessages.html" ng-if="form.submitted || form.volApartment.$dirty">
+                                    </td>
+                                    <td class="col-xs-1">
+                                        <display-validate element="form.volApartment" model="profile.apartment_number" required="false" edit="true"></display-validate>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-sm-4 col-xs-5">
+                                        <p class=""><label for="user-code">Kod pocztowy</label></p>
+                                    </td>
+                                    <td class="col-sm-3 col-xs-6">
+                                        <input type="text" placeholder="Twój kod pocztowy" id="user-code" name="volZip" ng-minlength="5" ng-maxlength="20"
+                                               class="border-input" ng-required="true" ng-model="profile.zipcode">
+                                        <div ng-messages="form.volZip.$error" ng-messages-include="errorMessages.html" ng-if="form.submitted || form.volZip.$dirty">
+                                    </td>
+                                    <td class="col-xs-1">
+                                        <display-validate element="form.volZip" model="profile.zipcode" required="true" edit="true"></display-validate>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-sm-4 col-xs-5">
+                                        <p class=""><label for="user-city">Miasto</label></p>
+                                    </td>
+                                    <td class="col-sm-6 col-xs-6">
+                                        <input type="text" placeholder="Twoje miasto" id="user-city" name="volCity" ng-minlength="5" ng-maxlength="50"
+                                               class="border-input" ng-required="true" ng-model="profile.city">
+                                        <div ng-messages="form.volCity.$error" ng-messages-include="errorMessages.html" ng-if="form.submitted || form.volCity.$dirty">
+                                    </td>
+                                    <td class="col-xs-1">
+                                        <display-validate element="form.volCity" model="profile.city" required="true" edit="true"></display-validate>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-sm-4 col-xs-5">
+                                        <p class=""><label for="user-country">Kraj</label></p>
+                                    </td>
+                                    <td class="col-sm-6 col-xs-6">
+                                        <select id="user-country" chosen="{inherit_select_classes:true}" name="volCountry"
+                                                ng-model="profile.country" width="'100%'"
+                                                ng-options="item.code as item.name for item in countries"
+                                                data-placeholder="Wybierz kraj"
+                                                class="border-input" ng-required="true"></select>
+                                        <div ng-messages="form.volCountry.$error" ng-messages-include="errorMessages.html" ng-if="form.submitted || form.volCountry.$dirty">
+                                    </td>
+                                    <td class="col-xs-1">
+                                        <display-validate element="form.volCountry" model="profile.country" required="true" edit="true"></display-validate>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <h2>Zdjęcie</h2>
+
+                        <div class="row registration-finish steps">
+                            <table class="col-md-11 col-xs-12 row">
+                                <tr>
+                                    <td class="col-xs-12 col-md-6">
+                                        <div id="offer-image">
+                                            <div class="image">
+                                                <input type="file" accept="image/jpeg,image/gif,image/png" ng-multiple="false"
+                                                        ng-model="file" ng-file-select="onFileSelect($files)">
+                                                <img ng-src="{{ getMediaUrl(filename, 'photo') }}" ng-show="filename && !(uploadFailed || fileTooBig)">
+                                                <span ng-show="uploadFailed">Upload zdjęcia nie powiódł się.</span>
+                                                <span ng-show="fileTooBig">Wybrane zdjęcie jest zbyt duże.</span>
+                                                <span ng-show="!filename">Dodaj zdjęcie (max 5MB)</span>
+                                                <div class="progress" ng-show="progressBar && !(uploadFailed || fileTooBig)">
+                                                    <div class="progress-bar" role="progressbar" aria-valuenow="{{ progress }}"
+                                                         ng-class="{'progress-bar-success': uploadSuccess, 'progress-bar-danger': uploadFailed}"
+                                                         aria-valuemin="0" aria-valuemax="100" style="width: {{ progress }}%;">
+                                                        {{ progress }}%
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="col-xs-12 col-md-5">
+                                        <div class="comment">
+                                            <p>Dodaj zdjęcie, które będzie widoczne na stronie.</p>
+
+                                            <p>Upewnij się, że posiadasz prawa autorskie do wykorzystania zdjęcia oraz zgody
+                                                osób widocznych na zdjęciu.</p>
+
+                                            <p class="req-list">
+                                                Minimalne wymiary: <span>350x218</span><br>
+                                                Format: <span>JPEG, PNG</span><br>
+                                                Maksymalny rozmiar: <span>5MB</span>
+                                            </p>
+                                            <span class="corner white-right"></span>
+                                            <span class="arrow"></span>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <div class="sub-bar">
+                            <p ng-show="error || userError || extendedError">Wystąpiły błędy podczas zapisu.</p>
+                            <p ng-show="success">Zmiany zostały zapisane</p>
+                            <button class="btn orange" type="button" ng-click="doTheBack()" ng-show="success"><i class="fa fa-angle-double-left left"></i>Powrót</button>
+                            <button class="btn orange" type="submit" ng-show="!success && !showLoader"><i class="fa fa-check"></i>Zapisz zmiany</button>
+                            <button class="btn orange" type="submit" ng-show="showLoader" ng-disabled="true">
+                                <div loader loader-style="'height: 25px; width: 40px;'"></div>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div recommended-offers offers="promotedOffers" limit="4"></div>

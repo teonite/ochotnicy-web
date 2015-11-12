@@ -1,0 +1,21 @@
+
+function removeLastSlash(str) {
+    return str[str.length - 1] === "/" ? str.slice(0, str.length - 1) : str;
+}
+
+// get url path variables
+var staticRoot = "";
+var backendRoot = "";
+var apiRoot = "";
+var ravenDNS = '';
+
+var tinyMce = {
+    theme: "modern",
+    plugins: ["advlist autolink lists link charmap preview hr anchor", "searchreplace wordcount", "insertdatetime table contextmenu paste"],
+    menubar: false,
+    toolbar: "undo redo | bold italic underline | alignleft aligncenter alignright | bullist numlist outdent indent",
+    language: 'pl',
+    resize: false,
+    statusbar: false
+};
+var webappVersion = '@@version';

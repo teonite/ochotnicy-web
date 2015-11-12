@@ -1,0 +1,73 @@
+<!--
+
+Portal Ochotnicy - http://ochotnicy.pl
+
+Copyright (C) Pracownia badań i innowacji społecznych Stocznia
+
+Development: TEONITE - http://teonite.com
+
+-->
+<div class="main-content-section">
+    <div class="container">
+        <div class="title-bar negative-top">
+            <div class="tags-social">
+            </div>
+            <h1>Rejestracja - krok 3</h1>
+        </div>
+
+        <div class="container regular-content">
+            <div class="full-width container">
+                <div class="row registration-finish steps">
+                    <table class="col-md-11 col-xs-12 row">
+                        <tr>
+                            <td class="col-xs-12 col-md-6">
+                                <div id="offer-image">
+                                    <div class="image">
+                                        <input type="file" accept="image/jpeg,image/gif,image/png" ng-multiple="false"
+                                                ng-model="file" ng-file-select="onFileSelect($files)">
+                                        <img ng-src="{{ getMediaUrl(filename, 'photo') }}" ng-show="filename && !(uploadFailed || fileTooBig)">
+                                        <span ng-show="uploadFailed">Upload zdjęcia nie powiódł się.</span>
+                                        <span ng-show="fileTooBig">Wybrane zdjęcie jest zbyt duże.</span>
+                                        <span ng-show="!filename">Dodaj zdjęcie (max 5MB)</span>
+                                        <div class="progress" ng-show="progressBar && !(uploadFailed || fileTooBig)">
+                                            <div class="progress-bar" role="progressbar" aria-valuenow="{{ progress }}"
+                                                 ng-class="{'progress-bar-success': uploadSuccess, 'progress-bar-danger': uploadFailed}"
+                                                 aria-valuemin="0" aria-valuemax="100" style="width: {{ progress }}%;">
+                                                {{ progress }}%
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="col-xs-12 col-md-5">
+                                <div class="comment">
+                                    <p>Dodaj zdjęcie, które będzie widoczne na stronie.</p>
+
+                                    <p>Upewnij się, że posiadasz prawa autorskie do wykorzystania zdjęcia oraz zgody
+                                        osób widocznych na zdjęciu.</p>
+
+                                    <p class="req-list">
+                                        Minimalne wymiary: <span>350x218</span><br>
+                                        Format: <span>JPEG, PNG</span><br>
+                                        Maksymalny rozmiar: <span>5MB</span>
+                                    </p>
+                                    <span class="corner white-right"></span>
+                                    <span class="arrow"></span>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="sub-bar">
+                    <a ui-sref="offer.list"><button class="btn orange" type="submit" ng-show="filename && !showLoader"><i class="fa fa-check"></i>Zakończ rejestrację</button></a>
+                    <a ui-sref="offer.list"><button class="btn orange" type="submit" ng-show="!filename && !showLoader"><i class="fa fa-close"></i>Pomiń</button></a>
+                    <button class="btn orange" type="submit" ng-show="showLoader" ng-disabled="true">
+                        <div loader loader-style="'height: 25px; width: 40px;'"></div>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div recommended-offers offers="promotedOffers" limit="4"></div>

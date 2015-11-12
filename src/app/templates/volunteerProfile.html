@@ -1,0 +1,208 @@
+<!--
+
+Portal Ochotnicy - http://ochotnicy.pl
+
+Copyright (C) Pracownia badań i innowacji społecznych Stocznia
+
+Development: TEONITE - http://teonite.com
+
+-->
+<div class="main-content-section">
+    <div class="container">
+
+        <div id="sticky-anchor"></div>
+        <div id="sticky" class="title-bar negative-top">
+            <h1>{{volunteer.first_name}} {{volunteer.last_name}}<span class="text-hide"> (profil wolontariusza)</span></h1>
+            <a ng-click="doTheBack()" class="btn purple join" ng-if="user.is_superuser && !isSelfProfile"><i class="fa fa-backward"></i>powrót<span class="corner left"></span></a>
+            <!--<a class="btn purple join" ng-show="user.is_organization"><i class="fa fa-check"></i>zaproś na rozmowę <span class="corner left"></span></a>-->
+            <ul class="nav nav-pills join" ng-if="isSelfProfile">
+                <li role="presentation" class="dropdown" dropdown>
+                    <a class="dropdown-toggle btn purple" dropdown-toggle role="button" aria-expanded="false">
+                        <i class="fa fa-cog"></i>Opcje<span class="corner left"></span>
+                    </a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li>
+                            <a class="btn purple" ui-sref="volunteer.applications({id: 'my'})" role="button" aria-expanded="false">
+                                <i class="fa fa-list"></i>Lista zgłoszeń
+                            </a>
+                        </li>
+                        <li>
+                            <a class="btn purple" ui-sref="volunteer.ratings({id: 'my'})" role="button" aria-expanded="false">
+                                <i class="fa fa-bars"></i>Lista opinii
+                            </a>
+                        </li>
+                        <li>
+                            <a class="btn purple" ui-sref="volunteer.edit" role="button" aria-expanded="false">
+                                <i class="fa fa-pencil"></i>Edytuj profilu
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+
+        <div class="container regular-content">
+            <div class="left-panel pull-left">
+                <div class="infobox">
+                    <span class="corner gray"></span>
+                    <div class="logo-container">
+                        <img ng-src="{{ getMediaUrl(volunteer.thumbnail_relation.filename, 'user') }}" alt="{{volunteer.first_name}} {{volunteer.last_name}}">
+                    </div>
+                </div>
+            </div>
+            <div class="project-list profile pull-right container">
+                <div class="important-content small col-md-6 col-xs-12 pull-right">
+                    <div class="col-xs-12 m-bottom-20">
+                        <h2><i class="fa fa-envelope"></i>E-mail</h2>
+                        <p ng-if="isOrganizationOrSelf()">{{volunteer.email}}</p>
+                        <p ng-if="!isOrganizationOrSelf()">Prywatne</p>
+                    </div>
+                    <div class="col-xs-12 m-bottom-20">
+                        <h2><i class="fa fa-phone"></i>Telefon</h2>
+                        <p ng-if="isOrganizationOrSelf()">
+                            <span ng-show="volunteer.phone">{{volunteer.phone}}</span>
+                            <span ng-show="!volunteer.phone">Brak danych</span>
+                        </p>
+                        <p ng-if="!isOrganizationOrSelf()">Prywatne</p>
+                    </div>
+                    <div class="col-xs-12 m-bottom-20">
+                        <h2><i class="fa fa-map-marker"></i>Adres zamieszkania</h2>
+                        <p ng-if="isOrganizationOrSelf()">{{constructAddress()}}</p>
+                        <p ng-if="!isOrganizationOrSelf()">Prywatne</p>
+                    </div>
+                    <div class="col-xs-12">
+                        <div class="map-container" ng-if="isOrganizationOrSelf() && latLength">
+                            <ui-gmap-google-map center="mapLatLng" zoom="13" options="mapOptions">
+                                <ui-gmap-marker coords="markerPos" idkey="0">
+                                </ui-gmap-marker>
+                            </ui-gmap-google-map>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="short-content col-md-6 col-xs-12 container pull-left">
+                    <h2><i class="fa fa-info"></i>O mnie</h2>
+                    <p ng-bind-html="volunteer.about"></p>
+
+                    <h2><i class="fa fa-bookmark"></i>Co robię na codzień</h2>
+                    <p>
+                       {{volunteer.education.name}}
+                    </p>
+
+                    <h2><i class="fa fa-tasks"></i>Moje kompetencje</h2>
+                    <ul>
+                        <li ng-repeat="ability in volunteer.abilities">
+                            {{ability.name}}
+                        </li>
+                    </ul>
+                    <h2><i class="fa fa-info"></i>Moje oczekiwania wobec wolontariatu</h2>
+                    <p ng-bind-html="volunteer.abilities_description"></p>                  
+                    
+                </div>
+
+                <div class="short-content col-xs-12 container pull-left m-top-25">
+                    <h2><i class="fa fa-comment"></i>Ostatnio otrzymane opinie ( <a ui-sref="volunteer.ratings({id: volunteer.id})">Zobacz wszystkie</a> )</h2>
+                    <div class="opinions row">
+                        <div class="col-sm-6 col-xs-12" ng-show="!volunteerRatings.length">
+                            <div class="opinion orga">
+                                <p class="comment">
+                                    Ten wolontariusz nie otrzymał jeszcze żadnej opinii.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-xs-12" ng-repeat="evaluation in volunteerRatings">
+                            <div class="opinion orga">
+                                <h4>
+                                    <a ui-sref="organization.profile({id: evaluation.organization_id})">{{evaluation.organization_fullname}}:</a>
+                                    <p class="pull-right">
+                                        <rating ng-model="evaluation.rating" max="5" readonly="true" state-on="'fa fa-star yellow'" state-off="'fa fa-star'"></rating>
+                                        (Ocena: {{evaluation.rating | number:2}}/5)
+                                    </p>
+                                </h4>
+                                <p class="comment" ng-show="evaluation.testimonial && (isSelfProfile || evaluation.is_public)">
+                                    {{evaluation.testimonial}}
+                                </p>
+                                <p class="comment" ng-show="evaluation.testimonial && !(isSelfProfile || evaluation.is_public)">
+                                    Opis jest prywatny
+                                </p>
+                                <p class="comment" ng-show="!evaluation.testimonial" >
+                                    Brak opisu
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="project-list pull-right container option-tabs" ng-if="isSelfProfile || user.is_superuser">
+                <ul class="nav nav-pills tabs">
+                    <li role="presentation" ng-class="{'active': tab == 'my'}">
+                        <a ng-click="setTab('my')">Moje zgłoszenia</a>
+                        <span class="arrow" ng-show="tab == 'my'"></span>
+                    </li>
+                    <li role="presentation" ng-class="{'active': tab == 'archive'}">
+                        <a ng-click="setTab('archive')">Moja aktywność</a>
+                        <span class="arrow" ng-show="tab == 'archive'"></span>
+                    </li>
+                    <!--<li role="presentation" ng-class="{'active': tab == 'rejected'}">
+                        <a ng-click="setTab('rejected')">Odrzucenia</a>
+                        <span class="arrow" ng-show="tab == 'rejected'"></span>
+                    </li>-->
+                </ul>
+                <div ng-show="tab == 'my'" class="container project-list">
+                    <div class="short-content col-xs-12 container">
+                        <div class="section-header row">
+                            <h2 class="pull-left">Zaakceptowane <span class="number">({{acceptedApplications.length}})</span><span class="corner-big"></span></h2>
+                        </div>
+                        <div class="short-content col-xs-12 container m-bottom-10">
+                            <div offer-list offers="acceptedApplications" limit="5" options="{showApplicationDate: true, showAgreeMessage: true}" type="volPrivate"></div>
+                        </div>
+                        <div class="section-header row">
+                            <h2 class="pull-left">Oczekujące na zaakceptowanie <span class="number">({{pendingApplications.length}})</span>
+                                <span class="corner-big"></span>
+                            </h2>
+                        </div>
+                        <div class="project-posts">
+                            <div offer-list offers="pendingApplications" limit="5" options="{showApplicationDate: true}" type="volPrivate"></div>
+                        </div>
+                    </div>
+                </div>
+                <div ng-show="tab == 'archive'" class="container project-list">
+                    <div class="short-content col-xs-12 container">
+                        <div offer-list ng-if="!user.is_superuser && isSelfProfile" offers="archiveApplications" limit="5" options="{showApplicationDate: true, showAgreementDate: true, showTestimonial: true, getAgreement: getAgreement, openRatingModal: openRatingModal, showDownloadButtons: true}" type="volPrivate"></div>
+                        <div offer-list ng-if="user.is_superuser && !isSelfProfile" offers="archiveApplications" limit="5" options="{showApplicationDate: true, showAgreementDate: true, showTestimonial: true, getAgreement: getAgreement, openRatingModal: openRatingModal, showDownloadButtons: true}" type="volPrivate"></div>
+                    </div>
+                </div>
+                <div ng-show="tab == 'rejected'" class="container project-list">
+                    <div class="short-content col-xs-12 container">
+                        <div offer-list offers="rejectedApplications" limit="5" options="{showRejectMessage: true}" type="volPrivate"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="project-list pull-right container option-tabs" ng-if="!isSelfProfile && !user.is_superuser">
+                <ul class="nav nav-pills tabs">
+                    <li role="presentation" ng-class="{'active': tab == 'actual'}">
+                        <a ng-click="setTab('actual')">Aktualnie uczestniczę ({{actualApplications.length}})</a>
+                        <span class="arrow" ng-show="tab == 'actual'"></span>
+                    </li>
+                    <li role="presentation" ng-class="{'active': tab == 'archive'}">
+                        <a ng-click="setTab('archive')">Uczestniczyłem/am ({{archiveApplications.length}})</a>
+                        <span class="arrow" ng-show="tab == 'archive'"></span>
+                    </li>
+                </ul>
+
+                <div class="project-list container">
+                    <div class="short-content col-xs-12 container">
+                        <form>
+                            <div class="project-posts">
+                                <div offer-list offers="actualApplications" limit="5" options="{}" type="volPublic" ng-show="tab == 'actual'"></div>
+                                <div offer-list offers="archiveApplications" limit="5" options="{showAgreementDate: true}" type="volPublic" ng-show="tab == 'archive'"></div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div recommended-offers offers="promotedOffers" limit="4"></div>

@@ -1,0 +1,790 @@
+<!--
+
+Portal Ochotnicy - http://ochotnicy.pl
+
+Copyright (C) Pracownia badań i innowacji społecznych Stocznia
+
+Development: TEONITE - http://teonite.com
+
+-->
+<div class="main-content-section">
+    <div class="container">
+        <div class="title-bar negative-top" ng-if="is_edited" wizard-header url="offerWizardHeader.html" step="5"></div>
+    </div>
+    <div class="container">
+        <div id="sticky-anchor" ng-if="!is_edited"></div>
+        <div id="sticky" class="title-bar" ng-class="{'preview': is_edited, 'negative-top': !is_edited}">
+            <div class="tags-social">
+                <ul class="tags">
+                    <li class="hidden-text">Tagi:</li>
+                    <li ng-repeat="category in offer.category"><a ui-sref="offer.tags({id: category.id})">{{ category.name }}</a></li>
+                </ul>
+                <div class="social-box pull-right">
+                    <span>Udostępnij na:</span>
+                    <a href="https://twitter.com/share" class="social tw pull-right"><i class="fa fa-twitter"></i><span class="hidden-text">Twitter</span></a>
+                    <a ng-href="https://www.facebook.com/dialog/share?display=page&href={{shareUrl}}&redirect_uri={{shareUrl}}&app_id={{fbAppId}}" class="social fb pull-right" target="_blank"><i class="fa fa-facebook"></i><span class="hidden-text">Facebook</span></a>
+                </div>
+            </div>
+            <h1>{{ offer.title }}</h1>
+            <a ng-click="apply()" class="btn purple join" ng-if="!is_edited && !user.is_organization && !userApplication"><i class="fa fa-check"></i>dołącz teraz<span class="corner left"></span></a>
+            <a ng-click="doTheBack()" class="btn purple join" ng-if="user.is_superuser && !isPublishingOrganization"><i class="fa fa-backward"></i>powrót<span class="corner left"></span></a>
+            <a disabled class="btn purple join" ng-if="!is_edited && userApplication"><i class="fa fa-check"></i>już dołączyłeś do tej oferty<span class="corner left"></span></a>
+            <ul class="nav nav-pills join" ng-if="!is_edited && isPublishingOrganization">
+                <li role="presentation" class="dropdown" dropdown>
+                    <a class="dropdown-toggle btn purple" dropdown-toggle role="button" aria-expanded="false">
+                        <i class="fa fa-cog"></i>Opcje<span class="corner left"></span>
+                    </a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li>
+                            <a class="btn purple" ui-sref="offer.edit({step: 1, id: offer.id})" role="button" aria-expanded="false">
+                                <i class="fa fa-pencil"></i> Edytuj ofertę
+                            </a>
+                        </li>
+                        <li>
+                            <a class="btn purple" ui-sref="offer.agreement.template({id: offer.id})" role="button" aria-expanded="false">
+                                <i class="fa fa-file-text-o"></i> Szablon porozumienia
+                            </a>
+                        </li>
+                        <li>
+                            <a class="btn purple" ui-sref="offer.certificate.template({id: offer.id})" role="button" aria-expanded="false">
+                                <i class="fa fa-file-text-o"></i> Szablon certyfikatu
+                            </a>
+                        </li>
+                        <li>
+                            <a class="btn purple" ui-sref="offer.agreement.details({id: offer.id})" role="button" aria-expanded="false">
+                                <i class="fa fa-th-large"></i> Opcje do porozumienia
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+
+        <div class="container regular-content">
+            <div class="left-panel pull-left">
+                <div class="infobox">
+                    <span class="corner gray"></span>
+
+                    <h3>{{ offer.publishing_organization.fullname }}</h3>
+
+                    <div class="logo-container">
+                        <img ng-src="{{ getMediaUrl(offer.publishing_organization.thumbnail_relation.filename, 'photo') }}" alt="Logo {{ offer.publishing_organization.fullname }}">
+                    </div>
+                    <a ui-sref="organization.profile({id: offer.publishing_organization.id})" class="more">» Inne oferty organizatora</a>
+                </div>
+                <div class="charts-wrapper">
+                    <div class="infobox">
+                        <span class="corner purple"></span>
+
+                        <div class="chart-wrapper">
+                            <div class="chart pull-left">
+                                <canvas doughnutchart data="timeChartData" options="chartOptions" alt="Wykres"
+                                        width="40" height="40"></canvas>
+                            </div>
+                            <p ng-show="isActiveOffer">Pozostało<span class="text-purple" am-time-ago="offer.publish_to"
+                                              am-without-suffix="true"></span></p>
+                            <p ng-show="!isActiveOffer">Czas zgłoszeń<span class="text-purple">upłynął</span></p>
+                        </div>
+                    </div>
+                    <div class="infobox">
+                        <span class="corner blue"></span>
+
+                        <div class="chart-wrapper">
+                            <div class="chart pull-left">
+                                <canvas doughnutchart data="volunteersChartData" options="chartOptions" alt="Wykres"
+                                        width="40" height="40"></canvas>
+                            </div>
+                            <p>Wolontariuszy<span class="text-blue">{{ offer.volunteers_joined_count }} / <span>{{ offer.volunteer_max_count }}</span></span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="infobox">
+                    <span class="corner orange"></span>
+
+                    <h3>Adres:</h3>
+
+                    <p>{{ offer.localization }}</p>
+
+                    <div class="map-container" ng-if="latLength">
+                        <ui-gmap-google-map center="mapLatLng" zoom="13" options="mapOptions">
+                            <ui-gmap-marker coords="markerPos" idkey="0">
+                            </ui-gmap-marker>
+                        </ui-gmap-google-map>
+                    </div>
+                </div>
+            </div>
+            <div class="project-list pull-left container">
+                <div class="important-content container">
+                    <div class="col-xs-12 col-md-7">
+                        <h2><i class="fa fa-tasks"></i>Zadania</h2>
+
+                        <p ng-bind-html="offer.description_quests"></p>
+
+                        <h2><i class="fa fa-clock-o"></i>Ile czasu?</h2>
+
+                        <p ng-bind-html="offer.description_time"></p>
+                    </div>
+                    <div class="col-xs-12 col-md-5">
+                        <div class="photo"><img
+                                ng-src="{{ getMediaUrl(offer.large_thumbnail_relation.filename, 'photo') }}"
+                                alt="Zdjęcie podglądowe"></div>
+                    </div>
+                </div>
+                <div class="short-content col-xs-12 col-md-7 container">
+                    <h2><i class="fa fa-info light"></i>O projekcie/inicjatywie</h2>
+
+                    <p ng-bind-html="offer.description"></p>
+
+                    <h2><i class="fa fa-group light"></i>Kogo szukamy</h2>
+
+                    <p ng-bind-html="offer.description_requirements"></p>
+
+                    <!--<h2><i class="fa fa-dot-circle-o light"></i>Dlaczego to robimy?</h2>
+
+                    <p ng-bind-html="offer.description_problem"></p>-->
+
+                    <h2><i class="fa fa-thumbs-up light"></i>Dodatkowe wymagania</h2>
+
+                    <p ng-bind-html="offer.description_additional_requirements"></p>
+
+                    <h2><i class="fa fa-check-circle-o light"></i>Oferujemy</h2>
+
+                    <p ng-bind-html="offer.description_benefits"></p>
+                </div>
+                <div class="col-xs-12 sub-bar" ng-if="!is_edited && !isPublishingOrganization">
+                    <a ng-click="apply()" class="btn purple"
+                       ng-if="!user.is_organization && !userApplication"><i class="fa fa-check"></i>dołącz teraz</a>
+                    <a disabled class="btn purple" ng-if="userApplication"><i class="fa fa-check"></i>już
+                        dołączyłeś do tej oferty</a>
+                </div>
+            </div>
+            <div class="project-list pull-right container option-tabs" ng-if="!is_edited && isPublishingOrganization">
+                <ul class="nav nav-pills tabs">
+                    <li role="presentation" ng-class="{'active': selectedTab == 'volunteer'}">
+                        <a ng-click="selectTab('volunteer')">Ochotnicy</a>
+                        <span class="arrow" ng-show="selectedTab == 'volunteer'"></span>
+                    </li>
+                    <li role="presentation" ng-class="{'active': selectedTab == 'agreement'}">
+                        <a ng-click="selectTab('agreement')">Porozumienia</a>
+                        <span class="arrow" ng-show="selectedTab == 'agreement'"></span>
+                    </li>
+                    <li role="presentation" ng-class="{'active': selectedTab == 'certificate'}">
+                        <a ng-click="selectTab('certificate')">Zaświadczenia</a>
+                        <span class="arrow" ng-show="selectedTab == 'certificate'"></span>
+                    </li>
+                    <li role="presentation" ng-class="{'active': selectedTab == 'reputation'}">
+                        <a ng-click="selectTab('reputation')">Opinie</a>
+                        <span class="arrow" ng-show="selectedTab == 'reputation'"></span>
+                    </li>
+                </ul>
+
+                <div class="project-list container" ng-if="selectedTab == 'volunteer'">
+                    <div class="short-content col-xs-12 container">
+
+                        <div class="section-header row">
+                            <h2 class="pull-left">Oczekujący na zaproszenie <span class="number">({{ pendingApplications.length }})</span>
+                                <span class="corner-big"></span>
+                            </h2>
+
+                            <div class="pull-right res-new-line">
+                                <label for="sortowanie-oczekujacych">Sortowanie:</label>
+                                <select ng-model="sorting.applications" ng-options="option as option.name for option in orderingOptions.applications" name="sortuj-po" class="border-input" id="sortowanie">
+                            </div>
+                        </div>
+
+                        <div class="list-menu" ng-if="pendingApplications.length">
+                            <ul class="nav nav-pills">
+                                <li>
+                                    <label class="check" ng-class="{'active': checkSelectAll(checked.pending, pendingApplications, 'app')}">
+                                        <span><i class="fa" ng-class="{'fa-check': checkSelectAll(checked.pending, pendingApplications, 'app')}"></i><input type="checkbox" name="user" ng-click="selectAll(checked.pending, pendingApplications, 'app')"/></span>
+                                    </label>
+                                </li>
+                                <li role="presentation">
+                                    <a class="green" ng-class="{'disabled': !checked.pending.length}" ng-click="evaluateApplicationModal(1, getIds(checked.pending))"><i class="fa fa-check"></i>Zaproś</a>
+                                </li>
+                                <li role="presentation">
+                                    <a class="red" ng-class="{'disabled': !checked.pending.length}" ng-click="evaluateApplicationModal(2, getIds(checked.pending))"><i class="fa fa-times"></i>Odmów</a></li>
+                            </ul>
+                        </div>
+
+                        <form>
+                            <div class="project-posts user-list">
+                                <div class="media post row" ng-show="!pendingApplications.length">Brak oczekujących aplikacji.</div>
+                                <div class="media post row" ng-repeat="application in pendingApplications | orderBy:sorting.applications.field">
+                                    <div class="media-left">
+                                        <label ng-class="{'active': checked.pending['Vol_' + application.id]}">
+                                                <span><i class="fa" ng-class="{'fa-check': checked.pending['Vol_' + application.id]}"></i><input type="checkbox" name="user" ng-model="checked.pending['Vol_' + application.id]"/></span>
+                                        </label>
+
+                                        <div class="avatar">
+                                            <img ng-src="{{ getMediaUrl(application.volunteer.thumbnail_relation.filename, 'user')}}" alt="Zdjęcie profilowe">
+                                        </div>
+                                    </div>
+                                    <div class="media-body">
+                                        <div class="col-sm-4 col-xs-12">
+                                            <h3><a ui-sref="volunteer.profile({id: application.volunteer.id})">{{ application.volunteer.first_name}} {{ application.volunteer.last_name }}</a></h3>
+
+                                            <p>Oczekuje na zaproszenie</p>
+                                        </div>
+                                        <div class="col-sm-8 col-xs-12">
+                                            <p>Umiejętności</p>
+                                            <ul class="tags">
+                                                <li class="hidden-text">Tagi:</li>
+                                                <li ng-repeat="ability in application.volunteer.abilities"><a>{{ ability.name }}</a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="media-right accept-reject">
+                                        <a class="circle-button tiny red pull-left" ng-click="evaluateApplicationModal(2, [application.id, ])"><i class="fa fa-close"></i>
+                                            <span class="info-popover reject">
+                                                Odmów <span class="hidden-text"> wolontariusza</span> <span class="corner-arrow"></span>
+                                            </span>
+                                        </a>
+                                    </div>
+                                    <div class="media-right accept-reject">
+                                        <a class="circle-button tiny green pull-left" ng-click="evaluateApplicationModal(1, [application.id, ])"><i class="fa fa-check"></i>
+                                            <span class="info-popover accept">
+                                                Zaproś <span class="hidden-text"> wolontariusza</span> <span class="corner-arrow"></span>
+                                            </span>
+                                        </a>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </form>
+
+                        <div class="section-header row">
+                            <h2 class="pull-left">Zaproszeni <span class="number">({{ acceptedApplications.length }} / {{ offer.volunteer_max_count }})</span>
+                                <span class="corner-big"></span>
+                            </h2>
+
+                            <div class="pull-right res-new-line">
+                                <label for="sortowanie">Sortowanie:</label>
+                                <select ng-model="sorting.applications" ng-options="option as option.name for option in orderingOptions.applications" name="sortuj-po" class="border-input" id="sortowanie">
+                            </div>
+                        </div>
+
+                        <div class="list-menu" ng-if="acceptedApplications.length">
+                            <ul class="nav nav-pills">
+                                <li>
+                                    <label class="check" ng-class="{'active': checkSelectAll(checked.accepted, acceptedApplications)}">
+                                        <span><i class="fa" ng-class="{'fa-check': checkSelectAll(checked.accepted, acceptedApplications)}"></i><input type="checkbox" name="user" ng-click="selectAll(checked.accepted, acceptedApplications)"/></span>
+                                    </label>
+                                </li>
+                                <li role="presentation"><a ng-click="getAgreementModal(getIds(checked.accepted), 'agreement')"><i class="fa fa-file-text-o"></i>Generuj porozumienia</a></li>
+                                <li role="presentation"><a ng-click="getAgreementModal(getIds(checked.accepted), 'certificate')"><i class="fa fa-asterisk"></i>Generuj zaświadczenia</a></li>
+                                <li role="presentation"><a href="#"><i class="fa fa-comment"></i>Wystaw opinię</a></li>
+                            </ul>
+                        </div>
+
+                        <div class="project-posts user-list" id="user-list">
+                            <form>
+                                <div class="media post row" ng-show="!acceptedApplications.length">Brak zaakceptowanych aplikacji.</div>
+                                <div class="media post row" ng-repeat="application in acceptedApplications | orderBy:sorting.applications.field">
+                                    <div class="media-left">
+                                        <label ng-class="{'active': checked.accepted['Vol_' + application.volunteer.id]}">
+                                                <span><i class="fa" ng-class="{'fa-check': checked.accepted['Vol_' + application.volunteer.id]}"></i><input type="checkbox" name="user" ng-model="checked.accepted['Vol_' + application.volunteer.id]"/></span>
+                                        </label>
+
+                                        <div class="avatar">
+                                            <img ng-src="{{ getMediaUrl(application.volunteer.thumbnail_relation.filename, 'user')}}" alt="Zdjęcie profilowe">
+                                        </div>
+                                    </div>
+                                    <div class="media-body">
+                                        <div class="col-sm-4 col-xs-12">
+                                            <h3><a ui-sref="volunteer.profile({id: application.volunteer.id})">{{ application.volunteer.first_name}} {{ application.volunteer.last_name }}</a></h3>
+
+                                            <p>Data przystąpienia: {{ application.created_at | date:"yyyy-MM-dd" }}</p>
+                                        </div>
+                                        <div class="col-sm-8 col-xs-12">
+                                            <p>Umiejętności</p>
+                                            <ul class="tags">
+                                                <li class="hidden-text">Tagi:</li>
+                                                <li ng-repeat="ability in application.volunteer.abilities"><a>{{ ability.name }}</a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="media-right">
+                                        <div class="media-right dropdown-list" dropdown>
+                                            <div class="circle-button small-gray dropdown-toggle" dropdown-toggle role="button" aria-expanded="false">
+                                                <a>Opcje<span class="hidden-text"> względem użytkownika</span></a>
+                                            </div>
+                                            <ul class="dropdown-menu from-left" role="menu">
+                                                <li class="corner blue right"></li>
+                                                <li>
+                                                    <!--<a class="btn blue"><i class="fa fa-envelope"></i>Wyślij wiadomość</a>-->
+                                                    <a class="btn blue" ng-click="getAgreementModal(application.volunteer.id, 'agreement')"><i class="fa fa-file-text"></i>Generuj umowę</a>
+                                                    <a class="btn blue" ng-click="getAgreementModal(application.volunteer.id, 'certificate')"><i class="fa fa-asterisk"></i>Generuj certyfikat</a>
+                                                    <a class="btn blue" ng-click="openRatingModal(application.volunteer)" ng-disabled="application.has_rating"><i class="fa fa-comment"></i>Wystaw opinię</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
+                        <div class="section-header row">
+                            <h2 class="pull-left">Odrzuceni w projekcie <span class="number">({{ rejectedApplications.length }})</span>
+                                <span class="corner-big"></span>
+                            </h2>
+
+                            <div class="pull-right res-new-line">
+                                <label for="sortowanie">Sortowanie:</label>
+                                <select ng-model="sorting.applications" ng-options="option as option.name for option in orderingOptions.applications" name="sortuj-po" class="border-input" id="sortowanie">
+                            </div>
+                        </div>
+
+                        <div class="project-posts user-list">
+                            <form>
+                                <div class="media post row" ng-show="!rejectedApplications.length">Brak odrzuconych aplikacji.</div>
+                                <div class="media post row" ng-repeat="application in rejectedApplications | orderBy:sorting.applications.field">
+                                    <div class="media-left">
+                                        <div class="avatar">
+                                            <img ng-src="{{ getMediaUrl(application.volunteer.thumbnail_relation.filename, 'user')}}" alt="Zdjęcie profilowe">
+                                        </div>
+                                    </div>
+                                    <div class="media-body">
+                                        <div class="col-sm-4 col-xs-12">
+                                            <h3><a ui-sref="volunteer.profile({id: application.volunteer.id})">{{ application.volunteer.first_name}} {{ application.volunteer.last_name }}</a></h3>
+
+                                        </div>
+                                        <div class="col-sm-8 col-xs-12">
+                                            <p>Przyczyna:</p>
+                                            <p ng-bind-html="application.message"></p>
+                                        </div>
+                                    </div>
+                                    <div class="media-right">&nbsp;</div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="project-list container" ng-if="selectedTab == 'agreement'">
+                    <div class="short-content col-xs-12 container">
+
+                        <div class="section-header row">
+                            <h2 class="pull-left">Porozumienia do przygotowania <span class="number">({{applications.agreement.not.length}})</span>
+                                <span class="corner-big"></span>
+                            </h2>
+
+                            <div class="pull-right res-new-line">
+                                <label for="sortowanie">Sortowanie:</label>
+                                <select ng-model="sorting.agreements" ng-options="option as option.name for option in orderingOptions.agreements" name="sortuj-po" class="border-input" id="sortowanie">
+                            </div>
+                        </div>
+
+                        <div class="list-menu" ng-if="applications.agreement.not.length">
+                            <ul class="nav nav-pills">
+                                <li>
+                                    <label class="check" ng-class="{'active': checkSelectAll(checked.agreementNew, applications.agreement.not)}">
+                                        <span><i class="fa" ng-class="{'fa-check': checkSelectAll(checked.agreementNew, applications.agreement.not)}"></i><input type="checkbox" name="user" ng-click="selectAll(checked.agreementNew, applications.agreement.not)"/></span>
+                                    </label>
+                                </li>
+                                <li role="presentation">
+                                    <a ng-click="getAgreementModal(getIds(checked.agreementNew), 'agreement')"><i class="fa fa-file-text-o"></i>Generuj porozumienia</a>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <form>
+                            <div class="project-posts user-list">
+                                <div class="media post row" ng-show="!applications.agreement.not.length">Brak porozumień do wygenerowania.</div>
+                                <div class="media post row" ng-repeat="application in applications.agreement.not | orderBy:sorting.agreements.field">
+                                    <div class="media-left">
+                                        <label ng-class="{'active': checked.agreementNew['Vol_' + application.volunteer.id]}">
+                                            <span>
+                                                <i class="fa" ng-class="{'fa-check': checked.agreementNew['Vol_' + application.volunteer.id]}"></i>
+                                                <input type="checkbox" name="user" ng-model="checked.agreementNew['Vol_' + application.volunteer.id]"/>
+                                            </span>
+                                        </label>
+
+                                        <div class="avatar">
+                                            <img ng-src="{{ getMediaUrl(application.volunteer.thumbnail_relation.filename, 'user') }}" alt="Zdjęcie profilowe">
+                                        </div>
+                                    </div>
+                                    <div class="media-body">
+                                        <div class="col-sm-4 col-xs-12">
+                                            <h3><a ui-sref="volunteer.profile({id: application.volunteer.id})">{{ application.volunteer.first_name}} {{ application.volunteer.last_name}}</a></h3>
+                                            <p>Oczekuje na umowę</p>
+                                        </div>
+                                    </div>
+                                    <div class="media-right">
+                                        <div class="circle-button small-gray" role="button" aria-expanded="false">
+                                            <a ng-click="getAgreementModal(application.volunteer.id, 'agreement')"><i class="fa fa-plus"></i></a>
+                                            <span class="info-popover">Generuj umowę
+                                                <span class="corner-arrow"></span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+
+                        <div class="section-header row">
+                            <h2 class="pull-left">Porozumienia zawarte <span class="number">({{applications.agreement.have.length}} / {{acceptedApplications.length}})</span>
+                                <span class="corner-big"></span>
+                            </h2>
+
+                            <div class="pull-right res-new-line">
+                                <label for="sortowanie">Sortowanie:</label>
+                                <select ng-model="sorting.agreements" ng-options="option as option.name for option in orderingOptions.agreements" name="sortuj-po" class="border-input" id="sortowanie">
+                            </div>
+                        </div>
+
+                        <div class="list-menu" ng-if="applications.agreement.have.length">
+                            <ul class="nav nav-pills">
+                                <li>
+                                    <label class="check" ng-class="{'active': checkSelectAll(checked.agreementExist, applications.agreement.have)}">
+                                        <span><i class="fa" ng-class="{'fa-check': checkSelectAll(checked.agreementExist, applications.agreement.have)}"></i><input type="checkbox" name="user" ng-click="selectAll(checked.agreementExist, applications.agreement.have)"/></span>
+                                    </label>
+                                </li>
+                                <li role="presentation">
+                                    <a ng-click="getAgreementModal(getIds(checked.agreementExist), 'agreement')"><i class="fa fa-file-text-o"></i>Pobierz porozumienia</a>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <form>
+                            <div class="project-posts user-list">
+                                <div class="media post row" ng-show="!applications.agreement.have.length">Brak wygenerowanych umów.</div>
+                                <div class="media post row" ng-repeat="application in applications.agreement.have | orderBy:sorting.agreements.field">
+                                    <div class="media-left">
+                                        <label ng-class="{'active': checked.agreementExist['Vol_' + application.volunteer.id]}">
+                                            <span>
+                                                <i class="fa" ng-class="{'fa-check': checked.agreementExist['Vol_' + application.volunteer.id]}"></i>
+                                                <input type="checkbox" name="user" ng-model="checked.agreementExist['Vol_' + application.volunteer.id]"/>
+                                            </span>
+                                        </label>
+
+                                        <div class="avatar">
+                                            <img ng-src="{{ getMediaUrl(application.volunteer.thumbnail_relation.filename, 'user')}}" alt="Zdjęcie profilowe">
+                                        </div>
+                                    </div>
+                                    <div class="media-body">
+                                        <div class="col-sm-4 col-xs-12">
+                                            <h3><a ui-sref="volunteer.profile({id: application.volunteer.id})">{{ application.volunteer.first_name}} {{ application.volunteer.last_name}}</a></h3>
+                                            <p>Data porozumienia: {{application.agreement.created_at | amDateFormat:'DD.MM.YYYY'}}</p>
+                                        </div>
+                                    </div>
+                                    <div class="media-right">
+                                        <div class="circle-button small-gray" role="button" aria-expanded="false">
+                                            <a ng-href="{{getMediaUrl('/media/' + application.agreement.not_signed_resource, '')}}"><i class="fa fa-file-text-o"></i></a>
+                                            <span class="info-popover">Podgląd porozumienia
+                                                <span class="corner-arrow"></span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="project-list container" ng-if="selectedTab == 'certificate'">
+                    <div class="short-content col-xs-12 container">
+
+                        <div class="section-header row">
+                            <h2 class="pull-left">Zaświadczenia do przygotowania <span class="number">({{applications.certificate.not.length}})</span>
+                                <span class="corner-big"></span>
+                            </h2>
+
+                            <div class="pull-right res-new-line">
+                                <label for="sortowanie">Sortowanie:</label>
+                                <select ng-model="sorting.certificates" ng-options="option as option.name for option in orderingOptions.certificates" name="sortuj-po" class="border-input" id="sortowanie">
+                            </div>
+                        </div>
+
+                        <div class="list-menu" ng-if="applications.certificate.not.length">
+                            <ul class="nav nav-pills">
+                                <li>
+                                    <label class="check" ng-class="{'active': checkSelectAll(checked.certificateNew, applications.certificate.not)}">
+                                        <span><i class="fa" ng-class="{'fa-check': checkSelectAll(checked.certificateNew, applications.certificate.not)}"></i><input type="checkbox" name="user" ng-click="selectAll(checked.certificateNew, applications.certificate.not)"/></span>
+                                    </label>
+                                </li>
+                                <li role="presentation"><a ng-click="getAgreementModal(getIds(checked.certificateNew), 'certificate')"><i class="fa fa-asterisk"></i>Generuj zaświadczenia</a></li>
+                            </ul>
+                        </div>
+
+                        <form>
+                            <div class="project-posts user-list">
+                                <div class="media post row" ng-show="!applications.certificate.not.length">Brak zaświadczeń do wygenerowania.</div>
+                                <div class="media post row" ng-repeat="application in applications.certificate.not | orderBy:sorting.certificates.field">
+                                    <div class="media-left">
+                                        <label ng-class="{'active': checked.certificateNew['Vol_' + application.volunteer.id]}">
+                                            <span>
+                                                <i class="fa" ng-class="{'fa-check': checked.certificateNew['Vol_' + application.volunteer.id]}"></i>
+                                                <input type="checkbox" name="user" ng-model="checked.certificateNew['Vol_' + application.volunteer.id]"/>
+                                            </span>
+                                        </label>
+
+                                        <div class="avatar">
+                                            <img ng-src="{{getMediaUrl(application.volunteer.thumbnail_relation.filename, 'user')}}" alt="Zdjęcie profilowe">
+                                        </div>
+                                    </div>
+                                    <div class="media-body">
+                                        <div class="col-xs-12">
+                                            <h3><a ui-sref="volunteer.profile({id: application.volunteer.id})">{{ application.volunteer.first_name}} {{ application.volunteer.last_name}}</a></h3>
+
+                                            <p>Oczekuje na zaświadczenie</p>
+                                        </div>
+                                    </div>
+                                    <div class="media-right">
+                                        <div class="circle-button small-gray" role="button" aria-expanded="false">
+                                            <a ng-click="getAgreementModal(application.volunteer.id, 'certificate')"><i class="fa fa-plus"></i></a>
+                                            <span class="info-popover">Generuj certyfikat
+                                                <span class="corner-arrow"></span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+
+                        <div class="section-header row">
+                            <h2 class="pull-left">Zaświadczenia wydane <span class="number">({{applications.certificate.have.length}} / {{acceptedApplications.length}})</span>
+                                <span class="corner-big"></span>
+                            </h2>
+
+                            <div class="pull-right res-new-line">
+                                <label for="sortowanie">Sortowanie:</label>
+                                <select ng-model="sorting.certificates" ng-options="option as option.name for option in orderingOptions.certificates" name="sortuj-po" class="border-input" id="sortowanie">
+                            </div>
+                        </div>
+
+                        <div class="list-menu" ng-if="applications.certificate.have.length">
+                            <ul class="nav nav-pills">
+                                <li>
+                                    <label class="check" ng-class="{'active': checkSelectAll(checked.certificateExist, applications.certificate.have)}">
+                                        <span><i class="fa" ng-class="{'fa-check': checkSelectAll(checked.certificateExist, applications.certificate.have)}"></i><input type="checkbox" name="user" ng-click="selectAll(checked.certificateExist, applications.certificate.have)"/></span>
+                                    </label>
+                                </li>
+                                <li role="presentation"><a ng-click="getAgreementModal(getIds(checked.certificateExist), 'certificate')"><i class="fa fa-asterisk"></i>Pobierz zaświadczenia</a></li>
+                            </ul>
+                        </div>
+
+                        <form>
+                            <div class="project-posts user-list">
+                                <div class="media post row" ng-show="!applications.certificate.have.length">Brak wygenerowanych zaświadczeń.</div>
+                                <div class="media post row" ng-repeat="application in applications.certificate.have | orderBy:sorting.certificates.field">
+                                    <div class="media-left">
+                                        <label ng-class="{'active': checked.certificateExist['Vol_' + application.volunteer.id]}">
+                                            <span>
+                                                <i class="fa" ng-class="{'fa-check': checked.certificateExist['Vol_' + application.volunteer.id]}"></i>
+                                                <input type="checkbox" name="user" ng-model="checked.certificateExist['Vol_' + application.volunteer.id]"/>
+                                            </span>
+                                        </label>
+
+                                        <div class="avatar">
+                                            <img ng-src="{{ getMediaUrl(application.volunteer.thumbnail_relation.filename, 'user')}}" alt="Zdjęcie profilowe">
+                                        </div>
+                                    </div>
+                                    <div class="media-body">
+                                        <div class="col-xs-12">
+                                            <h3><a ui-sref="volunteer.profile({id: application.volunteer.id})">{{ application.volunteer.first_name}} {{ application.volunteer.last_name}}</a></h3>
+                                            <p>Data zaświadczenia: {{application.certificate.created_at | amDateFormat:'DD.MM.YYYY'}}</p>
+                                        </div>
+                                    </div>
+                                    <div class="media-right">
+                                        <div class="media-right dropdown-list">
+                                            <div class="circle-button small-gray"role="button" aria-expanded="false">
+                                                <a ng-href="{{getMediaUrl('/media/' + application.certificate.not_signed_resource, '')}}"><i class="fa fa-asterisk"></i></a>
+                                                <span class="info-popover">Podgląd certyfikatu <span class="corner-arrow"></span></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="project-list container" ng-if="selectedTab == 'reputation'">
+                    <div class="short-content col-xs-12 container">
+
+                        <div class="section-header row">
+                            <h2 class="pull-left">Osoby oczekujące na opinię <span class="number">({{applications.ratings.not.length}})</span>
+                                <span class="corner-big"></span>
+                            </h2>
+
+                            <div class="pull-right res-new-line">
+                                <label for="sortowanie-oczekujacych">Sortowanie:</label>
+                                <select ng-model="sorting.ratings" ng-options="option as option.name for option in orderingOptions.ratings" name="sortuj-po" class="border-input" id="sortowanie">
+                            </div>
+                        </div>
+
+                        <form>
+                            <div class="project-posts user-list">
+                                 <div class="media post row" ng-show="!applications.ratings.not.length">Brak opinii do wystawienia.</div>
+                                 <div class="media post row" ng-repeat="application in applications.ratings.not | orderBy:sorting.ratings.field">
+                                    <div class="media-left">
+                                        <div class="avatar">
+                                            <img ng-src="{{ getMediaUrl(application.volunteer.thumbnail_relation.filename, 'user')}}" alt="Zdjęcie profilowe">
+                                        </div>
+                                    </div>
+                                    <div class="media-body">
+                                        <div class="col-xs-12">
+                                            <h3><a ui-sref="volunteer.profile({id: application.volunteer.id})">{{ application.volunteer.first_name}} {{ application.volunteer.last_name}}</a></h3>
+
+                                            <p>Oczekuje na opinię</p>
+                                        </div>
+                                    </div>
+                                    <div class="media-right">
+                                        <div class="circle-button small-gray" role="button" aria-expanded="false">
+                                            <a ng-click="openRatingModal(application.volunteer)"><i class="fa fa-plus"></i></a>
+                                            <span class="info-popover">Wystaw opinię
+                                                <span class="corner-arrow"></span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="opinions" ng-if="application.rating.organization">
+                                        <div class="col-sm-6 col-xs-12">
+                                            <div class="opinion user" ng-show="application.rating.organization">
+                                                <h4>
+                                                    <a ui-sref="volunteer.profile({id: application.volunteer.id})">{{ application.volunteer.first_name}} {{ application.volunteer.last_name}}:</a>
+                                                    <p class="pull-right">
+                                                        <rating ng-model="application.rating.organization.rating" max="5" readonly="true" state-on="'fa fa-star yellow'" state-off="'fa fa-star'"></rating>
+                                                        (Ocena: {{application.rating.organization.rating | number:2}}/5)
+                                                    </p>
+                                                </h4>
+                                                <p class="comment" ng-show="application.rating.organization.testimonial">
+                                                    {{application.rating.organization.testimonial}}
+                                                </p>
+                                                <p ng-show="!application.rating.organization.testimonial" class="comment">
+                                                    Brak opisu
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+
+                        <div class="section-header row">
+                            <h2 class="pull-left">Opinie wydane <span class="number">({{applications.ratings.have.length}} / {{acceptedApplications.length}})</span>
+                                <span class="corner-big"></span>
+                            </h2>
+
+                            <div class="pull-right res-new-line">
+                                <label for="sortowanie">Sortowanie:</label>
+                                <select ng-model="sorting.ratings" ng-options="option as option.name for option in orderingOptions.ratings" name="sortuj-po" class="border-input" id="sortowanie">
+                            </div>
+                        </div>
+
+                        <!--<div class="list-menu" ng-if="applications.ratings.have.length">-->
+                            <!--<ul class="nav nav-pills">-->
+                                <!--<li role="presentation">-->
+                                    <!--<form>-->
+                                        <!--<label ng-class="{'active': checkSelectAll(checked.ratingExist, applications.ratings.have)}">-->
+                                            <!--<span><i class="fa" ng-class="{'fa-check': checkSelectAll(checked.ratingExist, applications.ratings.have)}"></i><input type="checkbox" name="user" ng-click="selectAll(checked.ratingExist, applications.ratings.have)"/></span>-->
+                                        <!--</label>-->
+                                    <!--</form>-->
+                                <!--</li>-->
+                                <!--<li role="presentation"><a href="#"><i class="fa fa-plus"></i>Opublikuj opinię</a></li>-->
+                            <!--</ul>-->
+                        <!--</div>-->
+
+                        <form>
+                            <div class="project-posts user-list">
+                                <div class="media post row" ng-show="!applications.ratings.have.length">Brak wystawionych opinii.</div>
+                                <div class="media post row" ng-repeat="application in applications.ratings.have | orderBy:sorting.ratings.field">
+                                    <div class="media-left">
+                                        <!--<label ng-class="{'active': checked.ratingExist['Vol_' + application.volunteer.id]}">-->
+                                            <!--<span>-->
+                                                <!--<i class="fa" ng-class="{'fa-check': checked.ratingExist['Vol_' + application.volunteer.id]}"></i>-->
+                                                <!--<input type="checkbox" name="user" ng-model="checked.ratingExist['Vol_' + application.volunteer.id]"/>-->
+                                            <!--</span>-->
+                                        <!--</label>-->
+
+                                        <div class="avatar">
+                                            <img ng-src="{{ getMediaUrl(application.volunteer.thumbnail_relation.filename, 'user')}}" alt="Zdjęcie profilowe">
+                                        </div>
+                                    </div>
+                                    <div class="media-body">
+                                        <div class="col-xs-12">
+                                            <h3><a ui-sref="volunteer.profile({id: application.volunteer.id})">{{ application.volunteer.first_name}} {{ application.volunteer.last_name}}</a></h3>
+
+                                            <p>Data otrzymania opinii: {{application.rating.volunteer.created_at | amDateFormat:'DD.MM.YYYY'}}</p>
+                                        </div>
+                                    </div>
+                                    <div class="media-right">
+                                        <div class="circle-button small-gray" role="button" aria-expanded="false" ng-if="application.rating.organization && application.rating.organization.testimonial.length">
+                                            <a ng-click="changeRatingStatus(application.rating.organization)"><i class="fa" ng-class="{'fa-plus': !application.rating.organization.is_public, 'fa-minus': application.rating.organization.is_public}"></i></a>
+                                            <span class="info-popover" ng-if="!application.rating.organization.is_public">Opublikuj opinię tego wolontariusza <span class="corner-arrow"></span></span>
+                                            <span class="info-popover" ng-if="application.rating.organization.is_public">Nie publikuj opinii tego wolontariusza <span class="corner-arrow"></span></span>
+                                        </div>
+                                    </div>
+                                    <div class="opinions">
+                                        <div class="col-sm-6 col-xs-12">
+                                            <div class="opinion no-comment" ng-show="!application.rating.volunteer">
+                                                <span>Organizacja nie wystawiła jeszcze opinii.</span>
+                                            </div>
+                                            <div class="opinion orga" ng-show="application.rating.volunteer">
+                                                <h4>
+                                                    Twoja opinia:
+                                                    <p class="pull-right">
+                                                        <rating ng-model="application.rating.volunteer.rating" readonly="true" max="5" state-on="'fa fa-star yellow'" state-off="'fa fa-star'"></rating>
+                                                        (Ocena: {{application.rating.volunteer.rating | number:2}}/5)
+                                                    </p>
+                                                </h4>
+                                                <p ng-show="application.rating.volunteer.testimonial.length">
+                                                    {{application.rating.volunteer.testimonial}}
+                                                </p>
+                                                <p ng-show="!application.rating.volunteer.testimonial">
+                                                    Brak opisu
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6 col-xs-12">
+                                            <div class="opinion no-comment" ng-show="!application.rating.organization">
+                                                <span>Wolontariusz nie wystawił jeszcze opinii.</span>
+                                            </div>
+                                            <div class="opinion user" ng-show="application.rating.organization">
+                                                <h4>
+                                                    <a ui-sref="volunteer.profile({id: application.volunteer.id})">{{ application.volunteer.first_name}} {{ application.volunteer.last_name}}:</a>
+                                                    <p class="pull-right">
+                                                        <rating ng-model="application.rating.organization.rating" max="5" readonly="true" state-on="'fa fa-star yellow'" state-off="'fa fa-star'"></rating>
+                                                        (Ocena: {{application.rating.organization.rating | number:2}}/5)
+                                                    </p>
+                                                </h4>
+                                                <p class="comment" ng-show="application.rating.organization.testimonial">
+                                                    {{application.rating.organization.testimonial}}
+                                                </p>
+                                                <p ng-show="!application.rating.organization.testimonial" class="comment">
+                                                    Brak opisu
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container last-step" ng-if="is_edited">
+        <div class="container regular-content">
+            <div class="full-width container">
+                <div class="sub-bar menu">
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-5">
+                            <button class="btn options white" ui-sref="offer.list">
+                                Anuluj tworzenie projektu<i class="fa fa-close right"></i>
+                            </button>
+                        </div>
+                        <div class="col-xs-12 col-sm-7 right">
+                            <button class="btn options white responsive-big" ng-click="goToStep(4)">
+                                <i class="fa fa-chevron-left left"></i>Poprzedni krok
+                            </button>
+                            <button class="btn options orange responsive-big" ng-click="save()">
+                                Opublikuj<i class="fa fa-chevron-right right"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div recommended-offers offers="promotedOffers" limit="4"></div>

@@ -1,0 +1,81 @@
+<!--
+
+Portal Ochotnicy - http://ochotnicy.pl
+
+Copyright (C) Pracownia badań i innowacji społecznych Stocznia
+
+Development: TEONITE - http://teonite.com
+
+-->
+<form novalidate name="form">
+    <div class="modal-header separator">
+        <button type="button" class="close" ng-click="cancel()"><span aria-hidden="true">&times;</span><span class="sr-only">Zamknij okno</span></button>
+        <h2 class="modal-title" id="modal-reg-title">Ewaluacja: <span class="name">{{volunteer.first_name}} {{volunteer.last_name}}</span></h2>
+        <div class="important-content yellow msg m-bottom-30" ng-show="!(is_proceeded || success || fail)">
+            <p>
+                Oceń wolontariusza/organizację wpełniając poniższe pola. Możesz ocenić każdą z wykonanych przez niego czynności, jak i dodać właśne, według uznania.
+            </p>
+            <div class="corner-arrow"></div>
+        </div>
+    </div>
+    <div class="modal-body" ng-if="is_proceeded">Proszę czekać...</div>
+    <div class="modal-body" ng-if="success">
+        <p class="validation green">Ewaluacja została zapisana.</p>
+    </div>
+    <div class="modal-body" ng-if="fail">
+        <p class="validation red">Wystąpił błąd podczas zapisywania ewaluacji.</p>
+    </div>
+    <div class="modal-body" ng-show="!(is_proceeded || success || fail)">
+        <div class="rate-list">
+            <h3 class="normal">Umiejętności wybrane przez wolontariusza:</h3>
+            <ul class="row" ng-repeat="ability in volunteerAbilities">
+                <li class="col-sm-9 col-xs-12">
+                    {{ ability.name }}
+                </li>
+                <li class="col-sm-3 col-xs-12">
+                    <rating ng-model="ability.rating" max="5" state-on="'fa fa-star yellow'" state-off="'fa fa-star'" class="rate-stars"></rating>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="modal-body" ng-show="!(is_proceeded || success || fail)">
+        <div class="rate-list row">
+            <h3 class="normal">Inne umiejętności, które chciałbyś/chciałabyś ocenić:</h3>
+            <div class="col-xs-12 m-bottom-20">
+                <select id="otherSkills" chosen="{inherit_select_classes:true}" name="otherSkills"
+                        ng-model="otherAbilitiesSelect" width="'100%'" ng-options="item.id as item.name for item in otherAbilities track by item.id"
+                        data-placeholder="Wybierz umiejętności do oceny" class="border-input"></select>
+            </div>
+            <ul class="row" ng-repeat="ability in otherAbilitiesChosen">
+                <li class="col-sm-9 col-xs-12">
+                    <a ng-click="removeOtherAbility(ability)"><i class="fa fa-close red"></i></a>
+                    {{ ability.name }}
+                </li>
+                <li class="col-sm-3 col-xs-12">
+                    <rating ng-model="ability.rating" max="5" state-on="'fa fa-star yellow'" state-off="'fa fa-star'" class="rate-stars"></rating>
+                </li>
+            </ul>
+
+        </div>
+    </div>
+    <div class="modal-body" ng-show="!(is_proceeded || success || fail)">
+        <h3 class="normal">Opisz w kilku zdaniach współpracę z tym wolontariuszem:</h3>
+        <ul class="row m-bottom-10">
+            <li class="col-xs-12">
+                <textarea class="textarea" id="testimonial" placeholder="Przykład: Świetny wolontariusz. Praca z nim to czysta przyjemność. Polecamy!" ng-model="testimonial"></textarea>
+            </li>
+        </ul>
+    </div>
+    <div class="modal-footer text-center">
+        <h3 class="m-top-0 m-bottom-10">Twoja ocena:</h3>
+        <div class="row text-center m-bottom-30">
+            <rating ng-model="average" max="5" state-on="'fa fa-star yellow'" state-off="'fa fa-star'" class="rate-stars" readonly="true"></rating>
+            <span class="rate-desc">{{average | number:2}}/5</span>
+        </div>
+        <button class="btn big green" ng-disabled="!filled" ng-click="submit()" role="button" ng-show="!is_proceeded && !(success || fail)"><i class="fa fa-check-square-o"></i>Zakończ ewaluację</button>
+        <button class="btn big green" ng-click="cancel()" role="button" ng-show="success || fail">&times; Zamknij okno</button>
+        <button class="btn big green" role="button" ng-show="is_proceeded" ng-disabled="true">
+            <div loader loader-style="'height: 25px; width: 40px;'"></div>
+        </button>
+    </div>
+</form>

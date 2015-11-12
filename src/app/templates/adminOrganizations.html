@@ -1,0 +1,95 @@
+<!--
+
+Portal Ochotnicy - http://ochotnicy.pl
+
+Copyright (C) Pracownia badań i innowacji społecznych Stocznia
+
+Development: TEONITE - http://teonite.com
+
+-->
+        <div class="main-content-section">
+
+            <div class="container">
+
+                <div class="title-bar preview negative-top">
+                    <h1>Lista organizacji</h1>
+                </div>
+
+                <div class="container regular-content">
+
+                    <div class="container">
+                        <div class="short-content col-xs-12 container">
+
+                            <div class="section-header row">
+                                <h2 class="pull-left m-bottom-20">Organizacje wolontaryjne <span class="number">({{organizations.length}})</span>
+                                    <span class="corner-big"></span>
+                                </h2>
+
+                                <div class="pull-right res-new-line">
+                                    <label for="sortowanie">Sortowanie:</label>
+                                    <select ng-model="ordering" ng-options="option as option.name for option in orderingOptions" name="sortuj-po" class="border-input" id="sortowanie">
+                                </div>
+                            </div>
+
+                            <form>
+                                <div class="project-posts user-list">
+                                    <div class="media post row" dir-paginate="organization in organizations | orderBy:ordering.field | itemsPerPage: 10">
+                                        <div class="media-left">
+                                            <div class="avatar">
+                                                <img ng-src="{{getMediaUrl(organization.thumbnail_relation.filename, 'user')}}" alt="Zdjęcie profilowe">
+                                            </div>
+                                        </div>
+                                        <div class="media-body">
+                                            <div class="row details">
+                                                <div class="col-md-4 col-sm-12 media-details">
+                                                    <h3><a ui-sref="organization.profile({id: organization.id})">{{organization.fullname}}</a></h3>
+                                                    <p class="orange-base-dark" ng-show="organization.can_autoskip"><i class="fa fa-bookmark orange"></i>Konto samodzielne</p>
+                                                    <p ng-show="!organization.can_autoskip">Konto zwykłe</p>
+                                                </div>
+                                                <div class="col-md-4 col-sm-6 col-xs-12 media-details">
+                                                    <p class="data header">Kontakt
+                                                        <span>E-mail: <a ng-href="mailto:{{organization.coordinator.email}}">{{organization.coordinator.email}}</a></span>
+                                                        <span>Telefon:
+                                                            <span ng-show="organization.phone.length">{{organization.phone}}</span>
+                                                            <span ng-show="!organization.phone.length">Brak danych</span>
+                                                        </span>
+                                                    </p>
+                                                </div>
+                                                <div class="col-md-4 col-sm-6 col-xs-12 media-details">
+                                                    <p class="data header">Oferty organizacji  ( <a ui-sref="organization.offers({id: organization.id})">lista</a> )
+                                                        <span><span class="text-green">{{organization.published}}</span> zaakceptowanych</span>
+                                                        <span><span class="text-blue">{{organization.in_review}}</span> do zaakceptowania</span>
+                                                        <span><span class="text-red">{{organization.rejected}}</span> odrzuconych</span>
+                                                        <span><span>{{organization.draft}}</span> szkiców</span>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="media-right">
+                                            <div class="media-right dropdown-list" dropdown>
+                                                <div class="circle-button small-gray dropdown-toggle" dropdown-toggle role="button" aria-expanded="false">
+                                                    <a>Opcje<span class="hidden-text"> względem użytkownika</span></a>
+                                                </div>
+                                                <ul class="dropdown-menu from-left" role="menu">
+                                                    <li class="corner blue right"></li>
+                                                    <li>
+                                                        <a class="btn blue" ui-sref="organization.profile({id: organization.id})"><i class="fa fa-eye"></i>Zobacz profil</a>
+                                                        <!--<a class="btn blue"><i class="fa fa-envelope"></i>Wyślij wiadomość</a>-->
+                                                        <a class="btn blue" ng-click="changeAutoskip(organization)" ng-show="organization.can_autoskip"><i class="fa fa-bookmark"></i>Oznacz jako konto zwykłe</a>
+                                                        <a class="btn blue" ng-click="changeAutoskip(organization)" ng-show="!organization.can_autoskip"><i class="fa fa-bookmark"></i>Oznacz jako konto samodzielne</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+
+                        </div>
+
+                        <dir-pagination-controls></dir-pagination-controls>
+
+                    </div>
+                </div>
+            </div>
+        </div>

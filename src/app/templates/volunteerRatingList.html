@@ -1,0 +1,110 @@
+<!--
+
+Portal Ochotnicy - http://ochotnicy.pl
+
+Copyright (C) Pracownia badań i innowacji społecznych Stocznia
+
+Development: TEONITE - http://teonite.com
+
+-->
+<div class="main-content-section">
+    <div class="container">
+        <div id="sticky-anchor"></div>
+        <div id="sticky" class="title-bar negative-top">
+            <h1>{{volunteer.first_name}} {{volunteer.last_name}} (<span class="text-blue" am-time-ago="volunteer.birthday" am-without-suffix="true"></span>)<span class="text-hide"> (profil użytkownika)</span></h1>
+            <a class="btn purple join" ui-sref="volunteer.profile({id: volunteer.id})">
+                <i class="fa fa-backward"></i>powrót do profilu <span class="corner left"></span>
+            </a>
+        </div>
+
+        <div class="container regular-content">
+            <div class="left-panel pull-left">
+                <div class="infobox">
+                    <span class="corner gray"></span>
+                    <div class="logo-container">
+                        <img ng-src="{{ getMediaUrl(volunteer.thumbnail_relation.filename, 'user') }}" alt="Zdjęcie użytkownika">
+                    </div>
+                </div>
+                <!--<div class="small-padding">-->
+                    <!--<a href="#" class="btn orange full"><i class="fa fa-chevron-left"></i>wróć do profilu</a>-->
+                <!--</div>-->
+            </div>
+
+            <div class="project-list profile pull-right container">
+                <div class="short-content col-xs-12 container pull-left">
+                    <div class="section-header row">
+                        <h2 class="pull-left" ng-if="isSelfProfile">Publiczne ewaluacje <span class="number">({{publicRatings.length}})</span><span class="corner-big"></span></h2>
+                        <h2 class="pull-left" ng-if="!isSelfProfile">Lista otrzymanych ewaluacji <span class="number">({{publicRatings.length}})</span><span class="corner-big"></span></h2>
+                        <div class="pull-right responsive-hide">
+                            <form>
+                                <label for="sortowanie">Sortuj po:</label>
+                                <select ng-model="ordering" ng-options="option as option.name for option in orderingOptions" name="sortuj-po" class="border-input" id="sortowanie">
+                            </form>
+                        </div>
+                    </div>
+                    <div class="opinions row all" ng-show="!publicRatings.length">Brak ewaluacji</div>
+                    <div class="opinions row all">
+                        <div class="col-sm-6 col-xs-12" dir-paginate="evaluation in publicRatings | orderBy:ordering.field | itemsPerPage: 10">
+                            <div class="opinion orga">
+                                <h4>
+                                    <a ui-sref="organization.profile({id: evaluation.organization_id})">{{evaluation.organization_fullname}}:</a>
+                                    <p class="pull-right">
+                                        <rating ng-model="evaluation.rating" max="5" readonly="true" state-on="'fa fa-star yellow'" state-off="'fa fa-star'"></rating>
+                                        (Ocena: {{evaluation.rating | number:2}}/5)
+                                    </p>
+                                </h4>
+                                <p class="comment" ng-show="evaluation.testimonial">
+                                    {{evaluation.testimonial}}
+                                </p>
+                                <p class="comment" ng-show="!evaluation.testimonial" >
+                                    Brak opisu
+                                </p>
+                                <p ng-show="evaluation.testimonial && isSelfProfile">
+                                    <a ng-click="changeStatus(evaluation)">Oznacz opis jako prywatny</a>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <dir-pagination-controls></dir-pagination-controls>
+                </div>
+                <div class="short-content col-xs-12 container pull-left" ng-if="isSelfProfile">
+                    <div class="section-header row">
+                        <h2 class="pull-left">Prywatne ewaluacje <span class="number">({{privateRatings.length}})</span><span class="corner-big"></span></h2>
+                        <div class="pull-right responsive-hide">
+                            <form>
+                                <label for="sortowanie">Sortuj po:</label>
+                                <select ng-model="ordering" ng-options="option as option.name for option in orderingOptions" name="sortuj-po" class="border-input" id="sortowanie">
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="opinions row all" ng-show="!privateRatings.length">Brak ewaluacji</div>
+                    <div class="opinions row all">
+                        <div class="col-sm-6 col-xs-12" dir-paginate="evaluation in privateRatings | orderBy:ordering.field | itemsPerPage: 10">
+                            <div class="opinion orga">
+                                <h4>
+                                    <a ui-sref="organization.profile({id: evaluation.organization_id})">{{evaluation.organization_fullname}}:</a>
+                                    <p class="pull-right">
+                                        <rating ng-model="evaluation.rating" max="5" readonly="true" state-on="'fa fa-star yellow'" state-off="'fa fa-star'"></rating>
+                                        (Ocena: {{evaluation.rating | number:2}}/5)
+                                    </p>
+                                </h4>
+                                <p class="comment" ng-show="evaluation.testimonial">
+                                    {{evaluation.testimonial}}
+                                </p>
+                                <p class="comment" ng-show="!evaluation.testimonial" >
+                                    Brak opisu
+                                </p>
+                                <p ng-show="evaluation.testimonial && isSelfProfile">
+                                    <a ng-click="changeStatus(evaluation)">Oznacz opis jako publiczny</a>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <dir-pagination-controls></dir-pagination-controls>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
